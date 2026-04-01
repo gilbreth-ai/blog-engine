@@ -7,7 +7,7 @@ interface HighlightProps {
 export function Highlight({ children }: HighlightProps) {
   return (
     <mark
-      className="font-semibold text-inherit"
+      className="highlight font-semibold text-inherit"
       style={{
         background:
           "linear-gradient(104deg, rgba(232,89,12,0) 0.9%, rgba(232,89,12,0.18) 2.4%, rgba(232,89,12,0.25) 5.8%, rgba(232,89,12,0.25) 93%, rgba(232,89,12,0.18) 96%, rgba(232,89,12,0) 98%)",

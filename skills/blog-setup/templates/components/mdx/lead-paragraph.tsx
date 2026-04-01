@@ -6,7 +6,7 @@ interface LeadParagraphProps {
 
 export function LeadParagraph({ children }: LeadParagraphProps) {
   return (
-    <div className="my-6 text-lg leading-relaxed text-gray-600 md:text-xl [&>p]:my-0">
+    <div className="lead-paragraph my-6 text-lg leading-relaxed text-gray-600 md:text-xl [&>p]:my-0">
       {children}
     </div>
   );

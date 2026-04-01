@@ -110,9 +110,10 @@ export default async function PostPage({
   const readingTime = data.readingTime ?? calculateReadingTime(content);
 
   // Evaluate MDX
-  const { content: MDXContent, faq, howToSteps } = await getMDXContent(filePath);
+  const { content: MDXContent, faq, howToSteps, citations } = await getMDXContent(filePath);
 
-  // JSON-LD structured data
+  // ─── JSON-LD Structured Data (GEO-optimized) ─────────────
+  const postUrl = `${SITE_URL}/blog/${slug}`;
   const hasThumbnail = fs.existsSync(
     path.join(process.cwd(), "public", `/blog/thumbnails/${slug}.svg`)
   );
@@ -120,26 +121,80 @@ export default async function PostPage({
     ? `${SITE_URL}/blog/thumbnails/${slug}.svg`
     : undefined;
 
+  // Word count for schema
+  const wordCount = content
+    .replace(/<[^>]*>/g, "")
+    .replace(/```[\s\S]*?```/g, "")
+    .split(/\s+/).length;
+
+  // 1. WebSite schema (tells AI engines about the site)
+  const webSiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${SITE_URL}/#website`,
+    url: SITE_URL,
+    name: data.author ?? "Blog",
+    publisher: {
+      "@type": "Organization",
+      "@id": `${SITE_URL}/#organization`,
+      name: data.author ?? "Blog",
+    },
+  };
+
+  // 2. BlogPosting schema (more specific than Article for blog content)
   const articleSchema = {
     "@context": "https://schema.org",
-    "@type": "Article",
+    "@type": "BlogPosting",
+    "@id": `${postUrl}/#article`,
     headline: data.title,
     description: data.description,
     datePublished: data.publishedAt,
     dateModified: data.updatedAt ?? data.publishedAt,
+    wordCount,
+    inLanguage: data.language ?? "en",
     author: data.author
-      ? { "@type": "Person", name: data.author }
+      ? {
+          "@type": "Person",
+          name: data.author,
+          url: SITE_URL,
+        }
       : undefined,
-    publisher: { "@type": "Organization", name: data.author ?? "Blog" },
+    publisher: {
+      "@type": "Organization",
+      "@id": `${SITE_URL}/#organization`,
+      name: data.author ?? "Blog",
+    },
     image: thumbnailUrl,
-    url: `${SITE_URL}/blog/${slug}`,
+    url: postUrl,
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `${SITE_URL}/blog/${slug}`,
+      "@id": postUrl,
+    },
+    isPartOf: {
+      "@type": "Blog",
+      "@id": `${SITE_URL}/blog/#blog`,
+      name: data.author ?? "Blog",
+      url: `${SITE_URL}/blog`,
     },
     keywords: data.seoKeywords?.join(", "),
+    articleSection: data.tags?.[0],
+    // Citation references for GEO — AI engines use these to verify claims
+    ...(citations && citations.length > 0 && {
+      citation: citations.map((c) => ({
+        "@type": "CreativeWork",
+        name: c.name,
+        author: c.author ? { "@type": "Organization", name: c.author } : undefined,
+        url: c.url,
+      })),
+    }),
+    // Speakable — tells AI voice assistants which sections to read aloud
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: [".lead-paragraph", ".key-takeaway", ".highlight"],
+    },
   };
 
+  // 3. BreadcrumbList schema
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -155,61 +210,68 @@ export default async function PostPage({
         "@type": "ListItem",
         position: 3,
         name: data.title,
-        item: `${SITE_URL}/blog/${slug}`,
+        item: postUrl,
       },
     ],
   };
 
+  // 4. FAQPage schema (Google featured snippets + AI Q&A extraction)
   const faqSchema =
     faq && faq.length > 0
       ? {
           "@context": "https://schema.org",
           "@type": "FAQPage",
+          "@id": `${postUrl}/#faq`,
           mainEntity: faq.map((item) => ({
             "@type": "Question",
             name: item.q,
-            acceptedAnswer: { "@type": "Answer", text: item.a },
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: item.a,
+            },
           })),
+          isPartOf: { "@id": `${postUrl}/#article` },
         }
       : null;
 
+  // 5. HowTo schema (Google rich results + AI step extraction)
   const howToSchema =
     howToSteps && howToSteps.length > 0
       ? {
           "@context": "https://schema.org",
           "@type": "HowTo",
+          "@id": `${postUrl}/#howto`,
           name: data.title,
+          description: data.description,
           step: howToSteps.map((step, i) => ({
             "@type": "HowToStep",
             position: i + 1,
             name: step.name,
             text: step.text,
+            url: `${postUrl}#step-${i + 1}`,
           })),
+          isPartOf: { "@id": `${postUrl}/#article` },
         }
       : null;
 
+  // Combine all schemas into a single @graph for cleaner output
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      webSiteSchema,
+      articleSchema,
+      breadcrumbSchema,
+      ...(faqSchema ? [faqSchema] : []),
+      ...(howToSchema ? [howToSchema] : []),
+    ],
+  };
+
   return (
     <>
-      {/* JSON-LD */}
+      {/* JSON-LD — single @graph with all schemas */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
-      />
-      {faqSchema && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-        />
-      )}
-      {howToSchema && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
-        />
-      )}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
       <article className="py-8">

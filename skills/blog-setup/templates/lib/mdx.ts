@@ -37,7 +37,7 @@ function slugify(text: string): string {
 }
 
 function createHeading(level: number) {
-  const Tag = `h${level}` as keyof JSX.IntrinsicElements;
+  const Tag = `h${level}` as keyof React.JSX.IntrinsicElements;
   return function HeadingWithId(props: { children?: React.ReactNode }) {
     const text = typeof props.children === "string"
       ? props.children
@@ -96,6 +96,12 @@ interface HowToStep {
   text: string;
 }
 
+interface Citation {
+  name: string;
+  author?: string;
+  url: string;
+}
+
 /* ─── Helpers ───────────────────────────────────────────── */
 
 export function extractHeadings(source: string): Heading[] {
@@ -148,5 +154,6 @@ export async function getMDXContent(filePath: string) {
     content: result.default as React.ComponentType,
     faq: (result.faq as FaqItem[] | undefined) ?? null,
     howToSteps: (result.howToSteps as HowToStep[] | undefined) ?? null,
+    citations: (result.citations as Citation[] | undefined) ?? null,
   };
 }
