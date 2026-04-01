@@ -1,7 +1,9 @@
 import React from "react";
 
 interface Reference {
-  label: string;
+  label?: string;
+  name?: string;
+  author?: string;
   url: string;
   accessed?: string;
 }
@@ -38,7 +40,7 @@ export function References({ items }: ReferencesProps) {
                   e.currentTarget.style.textDecorationColor = "";
                 }}
               >
-                {ref.label}
+                {ref.label || (ref.author ? `${ref.name} - ${ref.author}` : ref.name) || ref.url}
               </a>
               {ref.accessed && (
                 <span className="ml-1 text-xs text-gray-400">
