@@ -2,8 +2,8 @@
   <style>
     /* Compass — direction, strategy, "how to choose" posts
        Composition: compass body centered at (340, 212)
-       Outer ring r=140, total diameter 280px (>50% of 680)
-       Height spans ~280px (>60% of 425) */
+       Outer ring r=170, total diameter 340px (=50% of 680)
+       Height spans ~340px (>60% of 425) */
 
     .outer-ring {
       fill: white;
@@ -89,8 +89,8 @@
 
     /* Subtle ring pulse on hover — accent decoration */
     @keyframes ringPulse {
-      0%, 100% { r: 145; opacity: 0; }
-      50% { r: 155; opacity: 0.3; }
+      0%, 100% { r: 175; opacity: 0; }
+      50% { r: 185; opacity: 0.3; }
     }
     .pulse-ring {
       fill: none;
@@ -105,53 +105,53 @@
   </style>
 
   <!-- Ground shadow -->
-  <ellipse class="ground-shadow" cx="340" cy="375" rx="90" ry="7"/>
+  <ellipse class="ground-shadow" cx="340" cy="400" rx="105" ry="8"/>
 
   <!-- Pulse ring — accent decoration, hidden at rest -->
-  <circle class="pulse-ring" cx="340" cy="212" r="145"/>
+  <circle class="pulse-ring" cx="340" cy="212" r="175"/>
 
   <!-- Outer compass ring -->
-  <circle class="outer-ring" cx="340" cy="212" r="140"/>
+  <circle class="outer-ring" cx="340" cy="212" r="170"/>
 
   <!-- Inner ring for depth -->
-  <circle class="inner-ring" cx="340" cy="212" r="120"/>
+  <circle class="inner-ring" cx="340" cy="212" r="145"/>
 
   <!-- Major ticks — N, E, S, W (short bold lines, no text) -->
   <!-- North -->
-  <line class="tick-major" x1="340" y1="78" x2="340" y2="100"/>
+  <line class="tick-major" x1="340" y1="48" x2="340" y2="73"/>
   <!-- East -->
-  <line class="tick-major" x1="474" y1="212" x2="452" y2="212"/>
+  <line class="tick-major" x1="504" y1="212" x2="479" y2="212"/>
   <!-- South -->
-  <line class="tick-major" x1="340" y1="346" x2="340" y2="324"/>
+  <line class="tick-major" x1="340" y1="376" x2="340" y2="351"/>
   <!-- West -->
-  <line class="tick-major" x1="206" y1="212" x2="228" y2="212"/>
+  <line class="tick-major" x1="176" y1="212" x2="201" y2="212"/>
 
   <!-- Minor ticks — NE, SE, SW, NW -->
-  <!-- NE -->
-  <line class="tick-minor" x1="435" y1="117" x2="420" y2="132"/>
+  <!-- NE (170 * cos(45) ≈ 120.2) -->
+  <line class="tick-minor" x1="460" y1="92" x2="443" y2="109"/>
   <!-- SE -->
-  <line class="tick-minor" x1="435" y1="307" x2="420" y2="292"/>
+  <line class="tick-minor" x1="460" y1="332" x2="443" y2="315"/>
   <!-- SW -->
-  <line class="tick-minor" x1="245" y1="307" x2="260" y2="292"/>
+  <line class="tick-minor" x1="220" y1="332" x2="237" y2="315"/>
   <!-- NW -->
-  <line class="tick-minor" x1="245" y1="117" x2="260" y2="132"/>
+  <line class="tick-minor" x1="220" y1="92" x2="237" y2="109"/>
 
   <!-- Small degree dots between major ticks -->
-  <circle class="degree-dots" cx="370" cy="76" r="2.5"/>
-  <circle class="degree-dots" cx="400" cy="85" r="2.5"/>
-  <circle class="degree-dots" cx="310" cy="76" r="2.5"/>
-  <circle class="degree-dots" cx="280" cy="85" r="2.5"/>
+  <circle class="degree-dots" cx="376" cy="46" r="2.5"/>
+  <circle class="degree-dots" cx="410" cy="55" r="2.5"/>
+  <circle class="degree-dots" cx="304" cy="46" r="2.5"/>
+  <circle class="degree-dots" cx="270" cy="55" r="2.5"/>
 
   <!-- Compass needle — rotates as a group on hover -->
   <g class="needle-group">
     <!-- North half (brand accent, points up) -->
-    <polygon class="needle-north" points="340,105 330,212 350,212"/>
+    <polygon class="needle-north" points="340,82 328,212 352,212"/>
     <!-- South half (gray, points down) -->
-    <polygon class="needle-south" points="340,319 330,212 350,212"/>
+    <polygon class="needle-south" points="340,342 328,212 352,212"/>
     <!-- Center pivot -->
-    <circle class="needle-center" cx="340" cy="212" r="8"/>
+    <circle class="needle-center" cx="340" cy="212" r="9"/>
   </g>
 
   <!-- Inner decorative circle at center -->
-  <circle cx="340" cy="212" r="3" fill="#374151"/>
+  <circle cx="340" cy="212" r="3.5" fill="#374151"/>
 </svg>

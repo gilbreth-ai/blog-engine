@@ -1,8 +1,8 @@
 <svg viewBox="0 0 680 425" xmlns="http://www.w3.org/2000/svg">
   <style>
     /* Lightbulb — ideas, insights, "understanding" posts
-       Composition: bulb centered at ~(340, 195), base at ~(340, 310)
-       Total height ~255px, width ~180px bulb + rays extend to ~360px */
+       Composition: bulb centered at ~(340, 210), rays extend to x=170 and x=510
+       Total width ~340px, height ~290px, visual center ~(340, 212) */
 
     .bulb-glass {
       fill: white;
@@ -40,6 +40,13 @@
       opacity: 0.4;
       transition: opacity 0.4s ease, stroke 0.4s ease, transform 0.5s ease;
     }
+    .ray-long {
+      stroke: #e5e7eb;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      opacity: 0.25;
+      transition: opacity 0.4s ease, stroke 0.4s ease, transform 0.5s ease;
+    }
     .ground-shadow {
       fill: #e5e7eb;
       opacity: 0.4;
@@ -65,6 +72,10 @@
     }
     svg:hover .ray {
       opacity: 0.9;
+      stroke: #e8590c;
+    }
+    svg:hover .ray-long {
+      opacity: 0.6;
       stroke: #e8590c;
     }
     svg:hover .ground-shadow {
@@ -95,46 +106,57 @@
     }
   </style>
 
-  <!-- Ground shadow for depth -->
-  <ellipse class="ground-shadow" cx="340" cy="370" rx="65" ry="6"/>
+  <!-- All content shifted down 20px via wrapping group -->
+  <g transform="translate(0, 18)">
+    <!-- Ground shadow for depth -->
+    <ellipse class="ground-shadow" cx="340" cy="370" rx="65" ry="6"/>
 
-  <!-- Glow ring behind bulb — accent decoration, hidden in static state -->
-  <circle class="glow-ring" cx="340" cy="185" r="110"/>
+    <!-- Glow ring behind bulb — accent decoration, hidden in static state -->
+    <circle class="glow-ring" cx="340" cy="185" r="110"/>
 
-  <!-- Light rays radiating from bulb — 6 rays around the glass -->
-  <!-- Each ray is a short line segment pointing outward from the bulb center -->
-  <line class="ray ray-1" x1="340" y1="90" x2="340" y2="65"/>
-  <line class="ray ray-2" x1="415" y1="115" x2="435" y2="100"/>
-  <line class="ray ray-3" x1="435" y1="195" x2="460" y2="195"/>
-  <line class="ray ray-4" x1="415" y1="265" x2="435" y2="280"/>
-  <line class="ray ray-5" x1="265" y1="265" x2="245" y2="280"/>
-  <line class="ray ray-6" x1="265" y1="115" x2="245" y2="100"/>
+    <!-- Outer decorative rays — extend to edges for width -->
+    <line class="ray-long" x1="340" y1="55" x2="340" y2="30"/>
+    <line class="ray-long" x1="500" y1="100" x2="520" y2="85"/>
+    <line class="ray-long" x1="510" y1="195" x2="540" y2="195"/>
+    <line class="ray-long" x1="500" y1="280" x2="520" y2="295"/>
+    <line class="ray-long" x1="180" y1="280" x2="160" y2="295"/>
+    <line class="ray-long" x1="170" y1="195" x2="140" y2="195"/>
+    <line class="ray-long" x1="180" y1="100" x2="160" y2="85"/>
 
-  <!-- Bulb glass — classic rounded bulb shape -->
-  <path class="bulb-glass"
-    d="M 300 260
-       C 300 260, 290 220, 290 185
-       C 290 155, 300 120, 340 110
-       C 380 120, 390 155, 390 185
-       C 390 220, 380 260, 380 260
-       Z"
-  />
+    <!-- Light rays radiating from bulb — 6 primary rays -->
+    <line class="ray ray-1" x1="340" y1="80" x2="340" y2="50"/>
+    <line class="ray ray-2" x1="440" y1="110" x2="470" y2="90"/>
+    <line class="ray ray-3" x1="460" y1="195" x2="495" y2="195"/>
+    <line class="ray ray-4" x1="440" y1="275" x2="470" y2="295"/>
+    <line class="ray ray-5" x1="240" y1="275" x2="210" y2="295"/>
+    <line class="ray ray-6" x1="240" y1="110" x2="210" y2="90"/>
 
-  <!-- Filament inside the bulb — zigzag pattern -->
-  <path class="filament"
-    d="M 320 250 L 325 210 L 335 230 L 345 200 L 355 225 L 360 250"
-  />
-  <!-- Filament connection dots at top of supports -->
-  <circle class="filament-dot" cx="320" cy="250" r="3"/>
-  <circle class="filament-dot" cx="360" cy="250" r="3"/>
+    <!-- Bulb glass — classic rounded bulb shape -->
+    <path class="bulb-glass"
+      d="M 300 260
+         C 300 260, 290 220, 290 185
+         C 290 155, 300 120, 340 110
+         C 380 120, 390 155, 390 185
+         C 390 220, 380 260, 380 260
+         Z"
+    />
 
-  <!-- Screw base — three horizontal bands below the glass -->
-  <rect class="bulb-base" x="305" y="262" width="70" height="18" rx="4"/>
-  <line class="base-ring" x1="305" y1="282" x2="375" y2="282"/>
-  <rect class="bulb-base" x="310" y="282" width="60" height="14" rx="4"/>
-  <line class="base-ring" x1="310" y1="298" x2="370" y2="298"/>
-  <rect class="bulb-base" x="318" y="298" width="44" height="12" rx="6"/>
+    <!-- Filament inside the bulb — zigzag pattern -->
+    <path class="filament"
+      d="M 320 250 L 325 210 L 335 230 L 345 200 L 355 225 L 360 250"
+    />
+    <!-- Filament connection dots at top of supports -->
+    <circle class="filament-dot" cx="320" cy="250" r="3"/>
+    <circle class="filament-dot" cx="360" cy="250" r="3"/>
 
-  <!-- Bottom contact point -->
-  <circle class="filament-dot" cx="340" cy="316" r="4"/>
+    <!-- Screw base — three horizontal bands below the glass -->
+    <rect class="bulb-base" x="305" y="262" width="70" height="18" rx="4"/>
+    <line class="base-ring" x1="305" y1="282" x2="375" y2="282"/>
+    <rect class="bulb-base" x="310" y="282" width="60" height="14" rx="4"/>
+    <line class="base-ring" x1="310" y1="298" x2="370" y2="298"/>
+    <rect class="bulb-base" x="318" y="298" width="44" height="12" rx="6"/>
+
+    <!-- Bottom contact point -->
+    <circle class="filament-dot" cx="340" cy="316" r="4"/>
+  </g>
 </svg>

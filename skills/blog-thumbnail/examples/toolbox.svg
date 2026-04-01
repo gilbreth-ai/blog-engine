@@ -1,8 +1,8 @@
 <svg viewBox="0 0 680 425" xmlns="http://www.w3.org/2000/svg">
   <style>
     /* Toolbox — practical guides, "how to build/setup" posts
-       Composition: box body ~360px wide, ~200px tall, centered at (340, 230)
-       Tools peeking from top add ~60px, total height ~260px
+       Composition: box body ~360px wide, centered at (340, 212)
+       Tools peek higher above box, total height ~280px
        Wide horizontal shape — perfect for 16:10 landscape */
 
     .box-body {
@@ -15,7 +15,7 @@
       fill: #f9fafb;
       stroke: #cbd5e1;
       stroke-width: 2.5;
-      transform-origin: 160px 190px;
+      transform-origin: 160px 170px;
       transition: stroke 0.4s ease, transform 0.5s cubic-bezier(0.34, 1.2, 0.64, 1);
     }
     .box-latch {
@@ -38,14 +38,14 @@
       stroke-linecap: round;
       stroke-linejoin: round;
       transition: transform 0.5s ease, stroke 0.4s ease;
-      transform-origin: 300px 180px;
+      transform-origin: 300px 160px;
     }
     .tool-screwdriver {
       stroke: #374151;
       stroke-width: 2.5;
       stroke-linecap: round;
       transition: transform 0.5s ease, stroke 0.4s ease;
-      transform-origin: 380px 175px;
+      transform-origin: 380px 155px;
     }
     .screwdriver-handle {
       fill: #e8590c;
@@ -64,7 +64,7 @@
       stroke: #cbd5e1;
       stroke-width: 2;
       transition: transform 0.5s ease, stroke 0.4s ease;
-      transform-origin: 340px 185px;
+      transform-origin: 340px 165px;
     }
     .ruler-marks {
       stroke: #e5e7eb;
@@ -123,40 +123,40 @@
   </style>
 
   <!-- Ground shadow -->
-  <ellipse class="ground-shadow" cx="340" cy="365" rx="110" ry="8"/>
+  <ellipse class="ground-shadow" cx="340" cy="345" rx="110" ry="8"/>
 
   <!-- Tools peeking above the box — visible in static state, rise on hover -->
 
-  <!-- Wrench (left side) — angled, peeking out -->
+  <!-- Wrench (left side) — angled, peeking out higher -->
   <path class="tool-wrench"
-    d="M 285 195 L 295 145
-       M 290 150 C 280 140, 280 130, 290 125 C 300 130, 300 140, 290 150"
+    d="M 285 175 L 295 110
+       M 290 115 C 280 105, 280 95, 290 90 C 300 95, 300 105, 290 115"
   />
 
-  <!-- Ruler (center) — flat stick with marks -->
-  <rect class="tool-ruler" x="330" y="155" width="20" height="55" rx="2"/>
-  <line class="ruler-marks" x1="332" y1="165" x2="340" y2="165"/>
-  <line class="ruler-marks" x1="332" y1="175" x2="345" y2="175"/>
-  <line class="ruler-marks" x1="332" y1="185" x2="340" y2="185"/>
-  <line class="ruler-marks" x1="332" y1="195" x2="345" y2="195"/>
+  <!-- Ruler (center) — flat stick with marks, peeking higher -->
+  <rect class="tool-ruler" x="330" y="120" width="20" height="65" rx="2"/>
+  <line class="ruler-marks" x1="332" y1="132" x2="340" y2="132"/>
+  <line class="ruler-marks" x1="332" y1="145" x2="345" y2="145"/>
+  <line class="ruler-marks" x1="332" y1="158" x2="340" y2="158"/>
+  <line class="ruler-marks" x1="332" y1="171" x2="345" y2="171"/>
 
-  <!-- Screwdriver (right side) — handle + shaft peeking out -->
-  <rect class="screwdriver-handle" x="372" y="148" width="16" height="30" rx="4"/>
-  <line class="screwdriver-shaft" x1="380" y1="148" x2="380" y2="120"/>
+  <!-- Screwdriver (right side) — handle + shaft peeking out higher -->
+  <rect class="screwdriver-handle" x="372" y="118" width="16" height="30" rx="4"/>
+  <line class="screwdriver-shaft" x1="380" y1="118" x2="380" y2="85"/>
 
   <!-- Toolbox lid — opens on hover via rotation -->
-  <rect class="box-lid" x="160" y="190" width="360" height="25" rx="4"/>
+  <rect class="box-lid" x="160" y="170" width="360" height="25" rx="4"/>
 
   <!-- Toolbox body -->
-  <rect class="box-body" x="170" y="215" width="340" height="130" rx="6"/>
+  <rect class="box-body" x="170" y="195" width="340" height="130" rx="6"/>
 
   <!-- Internal divider line -->
-  <line class="divider" x1="340" y1="225" x2="340" y2="335"/>
+  <line class="divider" x1="340" y1="205" x2="340" y2="315"/>
 
   <!-- Front latches -->
-  <rect class="box-latch" x="260" y="270" width="20" height="14" rx="3"/>
-  <rect class="box-latch" x="400" y="270" width="20" height="14" rx="3"/>
+  <rect class="box-latch" x="260" y="250" width="20" height="14" rx="3"/>
+  <rect class="box-latch" x="400" y="250" width="20" height="14" rx="3"/>
 
   <!-- Handle on top of lid -->
-  <path class="handle" d="M 310 190 C 310 170, 370 170, 370 190"/>
+  <path class="handle" d="M 310 170 C 310 150, 370 150, 370 170"/>
 </svg>
