@@ -1,3 +1,8 @@
+import fs from "fs";
+import path from "path";
+import matter from "gray-matter";
+import { evaluate } from "@mdx-js/mdx";
+import * as runtime from "react/jsx-runtime";
 import { AccordionGroup } from "@/components/mdx/accordion-group";
 import { Callout } from "@/components/mdx/callout";
 import { Chart } from "@/components/mdx/chart";
@@ -47,3 +52,70 @@ export const MDX_COMPONENTS: Record<string, React.ComponentType<Record<string, u
   Timeline: Timeline as React.ComponentType<Record<string, unknown>>,
   TwoColumn: TwoColumn as React.ComponentType<Record<string, unknown>>,
 };
+
+/* ─── Types ─────────────────────────────────────────────── */
+
+export interface Heading {
+  level: number;
+  text: string;
+  id: string;
+}
+
+interface FaqItem {
+  q: string;
+  a: string;
+}
+
+interface HowToStep {
+  name: string;
+  text: string;
+}
+
+/* ─── Helpers ───────────────────────────────────────────── */
+
+export function extractHeadings(source: string): Heading[] {
+  const headings: Heading[] = [];
+  const lines = source.split("\n");
+  for (const line of lines) {
+    const match = line.match(/^(#{2,3})\s+(.+)$/);
+    if (match) {
+      const level = match[1].length;
+      const text = match[2].trim();
+      const id = text
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
+      headings.push({ level, text, id });
+    }
+  }
+  return headings;
+}
+
+export function calculateReadingTime(source: string): string {
+  const words = source
+    .replace(/<[^>]*>/g, "")
+    .replace(/```[\s\S]*?```/g, "")
+    .split(/\s+/).length;
+  const minutes = Math.max(1, Math.ceil(words / 230));
+  return `${minutes} min read`;
+}
+
+/**
+ * Read an MDX file, strip frontmatter, evaluate with @mdx-js/mdx,
+ * and return the rendered content plus any exported structured data.
+ */
+export async function getMDXContent(filePath: string) {
+  const raw = fs.readFileSync(filePath, "utf-8");
+  const { content } = matter(raw);
+
+  const result = await evaluate(content, {
+    ...(runtime as Record<string, unknown>),
+    useMDXComponents: () => MDX_COMPONENTS,
+  });
+
+  return {
+    content: result.default as React.ComponentType,
+    faq: (result.faq as FaqItem[] | undefined) ?? null,
+    howToSteps: (result.howToSteps as HowToStep[] | undefined) ?? null,
+  };
+}

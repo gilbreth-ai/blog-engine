@@ -1,28 +1,13 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
-import { evaluate } from "@mdx-js/mdx";
-import * as runtime from "react/jsx-runtime";
-import { MDX_COMPONENTS } from "@/lib/mdx";
+import {
+  MDX_COMPONENTS,
+  extractHeadings,
+  calculateReadingTime,
+  getMDXContent,
+} from "@/lib/mdx";
 import type { Metadata } from "next";
-
-/* ─── Types ─────────────────────────────────────────────── */
-
-interface Heading {
-  level: number;
-  text: string;
-  id: string;
-}
-
-interface FaqItem {
-  q: string;
-  a: string;
-}
-
-interface HowToStep {
-  name: string;
-  text: string;
-}
 
 /* ─── Helpers ───────────────────────────────────────────── */
 
@@ -37,33 +22,6 @@ function getAllSlugs(): string[] {
     .readdirSync(postsDir)
     .filter((f) => f.endsWith(".mdx"))
     .map((f) => f.replace(".mdx", ""));
-}
-
-function extractHeadings(source: string): Heading[] {
-  const headings: Heading[] = [];
-  const lines = source.split("\n");
-  for (const line of lines) {
-    const match = line.match(/^(#{2,3})\s+(.+)$/);
-    if (match) {
-      const level = match[1].length;
-      const text = match[2].trim();
-      const id = text
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/(^-|-$)/g, "");
-      headings.push({ level, text, id });
-    }
-  }
-  return headings;
-}
-
-function calculateReadingTime(source: string): string {
-  const words = source
-    .replace(/<[^>]*>/g, "")
-    .replace(/```[\s\S]*?```/g, "")
-    .split(/\s+/).length;
-  const minutes = Math.max(1, Math.ceil(words / 230));
-  return `${minutes} min read`;
 }
 
 /* ─── Static params ─────────────────────────────────────── */
@@ -138,14 +96,7 @@ export default async function PostPage({
   const readingTime = data.readingTime ?? calculateReadingTime(content);
 
   // Evaluate MDX
-  const { default: MDXContent, faq, howToSteps } = (await evaluate(content, {
-    ...(runtime as Record<string, unknown>),
-    useMDXComponents: () => MDX_COMPONENTS,
-  })) as {
-    default: React.ComponentType;
-    faq?: FaqItem[];
-    howToSteps?: HowToStep[];
-  };
+  const { content: MDXContent, faq, howToSteps } = await getMDXContent(filePath);
 
   // JSON-LD structured data
   const articleSchema = {
@@ -255,10 +206,36 @@ export default async function PostPage({
           </div>
         </header>
 
+        {/* Mobile TOC (collapsed above content) */}
+        {headings.length > 0 && (
+          <details className="mb-8 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4 lg:hidden">
+            <summary className="cursor-pointer text-sm font-medium text-[var(--color-muted)]">
+              Table of Contents
+            </summary>
+            <ul className="mt-3 space-y-1.5 text-sm">
+              {headings.map((h) => (
+                <li
+                  key={h.id}
+                  style={{
+                    paddingLeft: h.level === 3 ? "1rem" : "0",
+                  }}
+                >
+                  <a
+                    href={`#${h.id}`}
+                    className="text-[var(--color-muted)] no-underline hover:text-[var(--color-text)]"
+                  >
+                    {h.text}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </details>
+        )}
+
         {/* Content + TOC */}
         <div className="relative lg:grid lg:grid-cols-[1fr_200px] lg:gap-12">
           {/* Main content */}
-          <div className="prose prose-lg max-w-none">
+          <div className="prose prose-lg max-w-[680px]">
             <MDXContent />
           </div>
 
@@ -290,32 +267,6 @@ export default async function PostPage({
             </aside>
           )}
         </div>
-
-        {/* Mobile TOC (collapsed above content) */}
-        {headings.length > 0 && (
-          <details className="mb-8 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4 lg:hidden">
-            <summary className="cursor-pointer text-sm font-medium text-[var(--color-muted)]">
-              Table of Contents
-            </summary>
-            <ul className="mt-3 space-y-1.5 text-sm">
-              {headings.map((h) => (
-                <li
-                  key={h.id}
-                  style={{
-                    paddingLeft: h.level === 3 ? "1rem" : "0",
-                  }}
-                >
-                  <a
-                    href={`#${h.id}`}
-                    className="text-[var(--color-muted)] no-underline hover:text-[var(--color-text)]"
-                  >
-                    {h.text}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </details>
-        )}
       </article>
     </>
   );

@@ -1,6 +1,6 @@
 ---
 name: blog-setup
-description: Scaffold a new Next.js blog with 22 MDX components, Tailwind styling, and Vercel deployment. Use when starting a blog project from scratch.
+description: Scaffold a new Next.js blog with 21 MDX components, Tailwind styling, and Vercel deployment. Use when starting a blog project from scratch.
 user-invocable: true
 allowed-tools: Bash, Write, Read, Glob
 argument-hint: [project-name]
