@@ -1,0 +1,12 @@
+{
+  "name": "blog-engine",
+  "version": "1.0.0",
+  "description": "Write publish-ready blog posts with rich MDX components and SVG thumbnails. Research-first, SEO-optimized, component-rich content from a single topic prompt.",
+  "author": {
+    "name": "Storehaus",
+    "url": "https://github.com/storehaus/blog-engine"
+  },
+  "repository": "https://github.com/storehaus/blog-engine",
+  "license": "MIT",
+  "keywords": ["blog", "content", "writing", "mdx", "seo", "svg", "thumbnail"]
+}
