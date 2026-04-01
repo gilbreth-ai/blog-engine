@@ -122,7 +122,7 @@ export default function HomePage() {
             <div className="aspect-[16/10] overflow-hidden border-b border-[var(--color-border)] md:border-b-0 md:border-r">
               <img
                 src={`/blog/thumbnails/${featuredPost.slug}.svg`}
-                alt=""
+                alt={featuredPost.title}
                 className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
               />
             </div>
@@ -142,7 +142,7 @@ export default function HomePage() {
               </p>
             )}
             <div className="mt-4 flex items-center gap-3 text-xs text-[var(--color-muted)]">
-              {featuredPost.publishedAt && <time>{formatDate(featuredPost.publishedAt)}</time>}
+              {featuredPost.publishedAt && <time dateTime={featuredPost.publishedAt}>{formatDate(featuredPost.publishedAt)}</time>}
               {featuredPost.readingTime && (
                 <>
                   <span className="text-[var(--color-border)]">&middot;</span>
@@ -167,7 +167,7 @@ export default function HomePage() {
                 <div className="aspect-[16/10] overflow-hidden border-b border-[var(--color-border)]">
                   <img
                     src={`/blog/thumbnails/${post.slug}.svg`}
-                    alt=""
+                    alt={post.title}
                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
                   />
                 </div>
@@ -187,7 +187,7 @@ export default function HomePage() {
                   </p>
                 )}
                 <div className="mt-3 flex items-center gap-3 text-xs text-[var(--color-muted)]">
-                  {post.publishedAt && <time>{formatDate(post.publishedAt)}</time>}
+                  {post.publishedAt && <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>}
                   {post.readingTime && (
                     <>
                       <span className="text-[var(--color-border)]">&middot;</span>

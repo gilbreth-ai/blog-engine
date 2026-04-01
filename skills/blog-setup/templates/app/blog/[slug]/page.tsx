@@ -9,6 +9,9 @@ import {
 } from "@/lib/mdx";
 import type { Metadata } from "next";
 
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
 /* ─── Helpers ───────────────────────────────────────────── */
 
 function getPostPath(slug: string): string {
@@ -53,13 +56,24 @@ export async function generateMetadata({
     title: data.seoTitle ?? data.title,
     description: data.seoDescription ?? data.description,
     keywords: data.seoKeywords,
+    alternates: {
+      canonical: `${SITE_URL}/blog/${slug}`,
+    },
     openGraph: {
       title: data.seoTitle ?? data.title,
       description: data.seoDescription ?? data.description,
       type: "article",
       publishedTime: data.publishedAt,
       ...(hasThumbnail && {
-        images: [{ url: thumbnailPath, width: 1200, height: 630 }],
+        images: [{ url: `${SITE_URL}${thumbnailPath}`, width: 1200, height: 630 }],
+      }),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: data.seoTitle ?? data.title,
+      description: data.seoDescription ?? data.description,
+      ...(hasThumbnail && {
+        images: [`${SITE_URL}${thumbnailPath}`],
       }),
     },
   };
@@ -99,15 +113,51 @@ export default async function PostPage({
   const { content: MDXContent, faq, howToSteps } = await getMDXContent(filePath);
 
   // JSON-LD structured data
+  const hasThumbnail = fs.existsSync(
+    path.join(process.cwd(), "public", `/blog/thumbnails/${slug}.svg`)
+  );
+  const thumbnailUrl = hasThumbnail
+    ? `${SITE_URL}/blog/thumbnails/${slug}.svg`
+    : undefined;
+
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: data.title,
     description: data.description,
     datePublished: data.publishedAt,
+    dateModified: data.updatedAt ?? data.publishedAt,
     author: data.author
       ? { "@type": "Person", name: data.author }
       : undefined,
+    publisher: { "@type": "Organization", name: data.author ?? "Blog" },
+    image: thumbnailUrl,
+    url: `${SITE_URL}/blog/${slug}`,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${SITE_URL}/blog/${slug}`,
+    },
+    keywords: data.seoKeywords?.join(", "),
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Blog",
+        item: `${SITE_URL}/blog`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: data.title,
+        item: `${SITE_URL}/blog/${slug}`,
+      },
+    ],
   };
 
   const faqSchema =
@@ -157,6 +207,10 @@ export default async function PostPage({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
         />
       )}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
 
       <article className="py-8">
         {/* Header */}
@@ -188,7 +242,7 @@ export default async function PostPage({
                 {data.author && (
                   <span className="text-[var(--color-border)]">&middot;</span>
                 )}
-                <time>
+                <time dateTime={data.publishedAt}>
                   {new Date(data.publishedAt).toLocaleDateString("en-US", {
                     year: "numeric",
                     month: "long",
