@@ -46,6 +46,13 @@ Copy every file from `${CLAUDE_PLUGIN_ROOT}/skills/blog-setup/templates/` into t
 
 Read each template file and write it to the corresponding path in the project directory. Preserve exact contents.
 
+**Critical: do NOT modify these patterns in the template files:**
+- `"use client"` directives — components with event handlers or React hooks MUST keep this. Removing it causes "Event handlers cannot be passed to Client Component props" at runtime.
+- `React.JSX.IntrinsicElements` — this is the React 19 syntax. Do NOT change it to `JSX.IntrinsicElements` (which was removed in `@types/react` 19).
+- `Record<string, React.ComponentType<any>>` in `lib/mdx.ts` — the `any` is intentional. MDX passes props dynamically; strict typing causes build failures under `strict: true`.
+- Unicode ranges in `slugify()` and `extractHeadings()` — these support Korean headings for TOC anchor links. Do NOT simplify the regex to ASCII-only.
+- `scroll-behavior: smooth` and `scroll-padding-top` in `globals.css` — these make TOC anchor links scroll smoothly and prevent headings from hiding behind the header.
+
 ## Step 4: Personalize Template Files
 
 Using the answers from Step 1, modify the copied files:
@@ -158,17 +165,46 @@ pnpm start  # Start production server
 cd "$PROJECT_DIR" && git init && git add -A && git commit -m "init: blog scaffolded with blog-engine plugin"
 ```
 
-## Step 9: Print Success Message
+## Step 9: Write the First Post Automatically
+
+Do NOT ask the user for a topic. Based on the brand name, reader persona, and tone from the onboarding answers, choose a topic that is:
+1. Broadly relevant to the brand's domain
+2. Genuinely useful to their reader persona
+3. A "first post" that establishes the blog's authority
+
+Examples of good first-post topics by domain:
+- Tech company → "How [technology] Actually Works (And Why It Matters)"
+- Fashion brand → "How to Build a Wardrobe That Lasts"
+- Food/restaurant → "The One Ingredient That Changes Everything"
+- SaaS → "The Real Cost of Not Solving [problem]"
+- General/unknown → "How to Get Started with [brand's domain]"
+
+Then execute the full blog-writer workflow on this topic:
+1. Research (SERP, PAA, competitor gaps, real data)
+2. Write the complete MDX post following editorial-voice.md, component-registry.md, and language-rules.md
+3. Validate (structure gate, quality gate, language gate)
+4. Generate SVG thumbnail following blog-thumbnail design-system.md
+5. Save post to `content/posts/{slug}.mdx` and thumbnail to `public/blog/thumbnails/{slug}.svg`
+
+This ensures the user sees a fully rendered blog with real content on their first `pnpm dev`.
+
+## Step 10: Print Success Message
 
 Output this message (replace placeholders with actual values):
 
 ```
 {blog title} is ready at ./$ARGUMENTS
 
-Next steps:
-1. cd $ARGUMENTS && pnpm dev → localhost:3000
-2. /blog-engine:blog-writer "Your first topic" → write your first post (includes thumbnail)
+Your first post "{post title}" is live with thumbnail.
+
+Preview:
+  cd $ARGUMENTS && pnpm dev → localhost:3000
+
+Write more:
+  /blog-writer "Your next topic"
+
+Deploy:
+  vercel deploy --prod
 
 Your brand voice is configured in brand-voice.md.
-To deploy: vercel deploy
 ```
