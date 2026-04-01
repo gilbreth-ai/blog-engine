@@ -110,12 +110,12 @@ Body paragraphs with components woven in naturally...
 Run three gates before delivering. If any gate fails, fix and re-check.
 
 **Gate 1: Structure**
-Does the MDX parse correctly? Do all exports exist and use valid syntax? Is there prose between every pair of components (never two components back-to-back)? Are there zero em-dashes in the output?
+Does the MDX parse correctly? Do all exports exist and use valid syntax? Is there prose between every pair of components (never two components back-to-back)? Are there zero em-dashes in the output? Does every `<KeyTakeaway>` include a `title` prop?
 
 **Gate 2: Quality**
-Would you send this to a friend as a genuinely useful read? Is every claim backed by a specific stat, source, or example? Does every component earn its place - would removing it lose information that prose alone can't convey?
+Would you send this to a friend as a genuinely useful read? Is every claim backed by a specific stat, source, or example? Does every component earn its place - would removing it lose information that prose alone can't convey? Are all headings declarative claims, not generic questions? Does the opening hook with a scenario, stat, or concrete moment - not a definition? Does the closing give exactly one action, not a summary? Is there a unique angle that differentiates this from what already ranks?
 
 **Gate 3: Language**
-Read every sentence as a native speaker. Does anything sound translated, robotic, or formulaic? Is sentence length varied - short punches mixed with longer explanations? Are there zero AI convergence patterns ("In this article", "Let's dive in", "comprehensive", "leverage")?
+Read every sentence as a native speaker. Does anything sound translated, robotic, or formulaic? Is sentence length varied - short punches mixed with longer explanations? Are there zero AI convergence patterns ("In this article", "Let's dive in", "comprehensive", "leverage")? Is the register consistent throughout - no sudden shifts between casual and formal tone?
 
 </workflow>
