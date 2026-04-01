@@ -1,0 +1,114 @@
+<example>
+---
+title: "When to Hire Your First Employee"
+description: "The signals that tell you it's time to hire, the math behind the decision, and why most founders wait too long."
+slug: "when-to-hire-first-employee"
+author: "Alex Park"
+seoTitle: "When to Hire Your First Employee: Signals, Math, and Timing"
+seoDescription: "Learn the concrete signals that it's time to hire your first employee. Includes the revenue threshold formula, employee vs contractor analysis, and common timing mistakes."
+seoKeywords:
+  - when to hire first employee
+  - hiring first employee startup
+  - first hire for small business
+  - employee vs contractor
+  - startup hiring guide
+  - when to stop doing everything yourself
+  - small business hiring cost
+  - first employee checklist
+  - revenue threshold for hiring
+  - founder doing too much
+tags:
+  - business
+  - hiring
+  - startup
+readingTime: "7 min read"
+publishedAt: "2025-12-03"
+---
+
+export const faq = [
+  { q: "How much revenue should I have before hiring?", a: "The standard formula is: annual salary + 30% overhead (taxes, insurance, equipment) should be coverable by 6 months of current revenue. If you're making $15K/month and the hire costs $70K/year fully loaded, you need $35K banked and confidence the revenue sustains. Don't hire on projected revenue." },
+  { q: "Should my first hire be full-time or part-time?", a: "Start with the work. If the tasks are 20+ hours per week of consistent, recurring work, full-time makes sense. If it's project-based or variable, start with a contractor or part-time role. The worst outcome is a full-time employee with not enough to do - they'll leave or you'll invent busywork." },
+  { q: "What role should I hire for first?", a: "Hire for the work you're worst at or hate most, as long as it directly generates revenue or frees you to generate revenue. For most solo founders, that's either operations (shipping, customer service, admin) or sales. Don't hire a marketer first unless marketing is your bottleneck." },
+  { q: "How do I know if I need an employee or a contractor?", a: "Three questions: Is the work ongoing (not project-based)? Do you need to control when and how it's done? Will this person need to grow into a bigger role? If yes to two or more, hire an employee. If the work has a clear end date or is highly specialized, use a contractor." },
+  { q: "What are the actual costs beyond salary?", a: "Employer payroll taxes add 7.65% (FICA). Workers' comp insurance varies by state and role - typically 1-3% for office work. Health insurance averages $7,900/year per employee for employer contribution. Equipment, software licenses, and onboarding time add another $2-5K. Budget 25-35% above base salary." },
+]
+
+export const citations = [
+  { name: "Employer Costs for Employee Compensation, Q3 2024", author: "Bureau of Labor Statistics", url: "https://www.bls.gov/news.release/ecec.nr0.htm" },
+  { name: "Small Business Employment Trends", author: "NFIB Research Foundation", url: "https://www.nfib.com/surveys/small-business-economic-trends/" },
+  { name: "State of Small Business Report 2024", author: "Gusto", url: "https://gusto.com/company-news/state-of-small-business" },
+  { name: "The E-Myth Revisited", author: "Michael E. Gerber", url: "https://www.michaelegerber.com/the-e-myth-revisited" },
+  { name: "Independent Contractor vs Employee Classification", author: "IRS", url: "https://www.irs.gov/businesses/small-businesses-self-employed/independent-contractor-self-employed-or-employee" },
+]
+
+<LeadParagraph>
+You just declined a project because you literally don't have the hours. That's
+not a capacity problem - that's a hiring signal. And if you're like most solo
+founders, you'll ignore it for another 6 months, burn out, and then panic-hire
+someone who isn't right.
+</LeadParagraph>
+
+## The moment most founders hire too late
+
+The NFIB's 2024 employment survey found that 42% of small business owners reported "few or no qualified applicants" for open positions. But the interesting number is what comes before that: the median solo founder waits 14 months after first hitting capacity before making their first hire.
+
+Fourteen months of turning down work. Fourteen months of doing $15/hour tasks when your time generates $150/hour. That's not being "careful with money." That's leaving money on the table because hiring feels scarier than exhaustion.
+
+<SVGDiagram
+  alt="Decision gate for hiring: three conditions feed into a hire/don't-hire decision. Condition 1: you're declining revenue-generating work. Condition 2: you spend over 10 hours per week on tasks below your rate. Condition 3: growth has plateaued due to your time, not market demand. If two or more conditions are true, the decision is hire."
+  svg="<svg viewBox='0 0 680 320' xmlns='http://www.w3.org/2000/svg'><style>text{font-family:system-ui,sans-serif;font-size:13px;fill:#374151}.box{fill:#f9fafb;stroke:#e5e7eb;stroke-width:1.5;rx:8}.signal{fill:#fef3c7;stroke:#f59e0b;stroke-width:1.5;rx:8}.yes{fill:#d1fae5;stroke:#059669;stroke-width:1.5;rx:8}.no{fill:#fee2e2;stroke:#dc2626;stroke-width:1.5;rx:8}@keyframes fadeIn{from{opacity:0}to{opacity:1}}.a1{animation:fadeIn .4s ease .3s both}.a2{animation:fadeIn .4s ease .7s both}.a3{animation:fadeIn .4s ease 1.1s both}</style><rect class='signal a1' x='20' y='20' width='280' height='50'/><text x='160' y='50' text-anchor='middle' font-weight='600'>Declining revenue-generating work?</text><rect class='signal a1' x='20' y='90' width='280' height='50'/><text x='160' y='120' text-anchor='middle' font-weight='600'>10+ hrs/week on below-rate tasks?</text><rect class='signal a1' x='20' y='160' width='280' height='50'/><text x='160' y='190' text-anchor='middle' font-weight='600'>Growth plateau = your time, not market?</text><rect class='box a2' x='380' y='90' width='100' height='50'/><text x='430' y='120' text-anchor='middle' font-weight='600'>2 of 3?</text><rect class='yes a3' x='540' y='40' width='120' height='50'/><text x='600' y='70' text-anchor='middle' font-weight='600' fill='#059669'>Hire</text><rect class='no a3' x='540' y='160' width='120' height='50'/><text x='600' y='190' text-anchor='middle' font-weight='600' fill='#dc2626'>Not yet</text><line x1='300' y1='45' x2='380' y2='115' stroke='#9ca3af' stroke-width='1.5'/><line x1='300' y1='115' x2='380' y2='115' stroke='#9ca3af' stroke-width='1.5'/><line x1='300' y1='185' x2='380' y2='115' stroke='#9ca3af' stroke-width='1.5'/><line x1='480' y1='105' x2='540' y2='65' stroke='#059669' stroke-width='1.5' marker-end='url(#arrowG)'/><line x1='480' y1='130' x2='540' y2='185' stroke='#dc2626' stroke-width='1.5' stroke-dasharray='6' marker-end='url(#arrowR)'/><text x='510' y='80' font-size='11' fill='#059669'>Yes</text><text x='510' y='170' font-size='11' fill='#dc2626'>No</text><defs><marker id='arrowG' markerWidth='8' markerHeight='6' refX='8' refY='3' orient='auto'><path d='M0,0 L8,3 L0,6' fill='#059669'/></marker><marker id='arrowR' markerWidth='8' markerHeight='6' refX='8' refY='3' orient='auto'><path d='M0,0 L8,3 L0,6' fill='#dc2626'/></marker></defs></svg>"
+  caption="If two of these three signals are true, you're past the hiring threshold"
+/>
+
+The signal isn't "I'm busy." Every founder is busy. The signal is declining work that would grow the business, spending hours on tasks someone else could do for a fraction of your effective rate, or watching growth flatten because you're the bottleneck - not the market.
+
+## Employee vs. contractor isn't about cost
+
+Most founders frame the first hire as an expense question. "Can I afford an employee?" But that's the wrong frame. The real question is: what kind of relationship does this work require?
+
+<ProConCard
+  title="Employee vs. contractor"
+  pros={[
+    "Full-time commitment and availability when you need them",
+    "Grows into the role - can take on more responsibility over time",
+    "Easier to build culture and align on long-term goals",
+    "You control the process, schedule, and priorities",
+  ]}
+  cons={[
+    "25-35% overhead above base salary (taxes, insurance, equipment)",
+    "Harder to end the relationship if it's not working",
+    "Fixed cost whether workload is high or low",
+    "Compliance obligations: payroll, workers' comp, labor law",
+  ]}
+/>
+
+The IRS has a clear test for this. If you control when, where, and how the work gets done, that's an employee - regardless of what you call them. Misclassifying an employee as a contractor to save on taxes is one of the most common (and most expensive) compliance mistakes small businesses make. Penalties include back taxes, interest, and potential fines.
+
+But beyond compliance, think about growth. A contractor does a job and leaves. An employee learns your business, anticipates problems, and eventually handles things you haven't thought of yet. Your first hire isn't just filling a role - it's adding a second brain to the operation.
+
+<KeyTakeaway title="The real cost of not hiring">
+Every hour you spend on $15/hour work is an hour you're not spending on $150/hour work.
+If your effective rate is $150/hour and you spend 10 hours a week on admin, shipping,
+and customer service, you're paying $1,500/week for tasks a $20/hour hire could handle.
+That's $78,000 per year in lost revenue capacity.
+</KeyTakeaway>
+
+## The math that makes the decision obvious
+
+Forget gut feelings. Run this calculation.
+
+Take your average monthly revenue over the last 6 months. Multiply by 12 for annual revenue. Now calculate the fully loaded cost of the hire: base salary plus 30% for taxes, insurance, and equipment. If 6 months of current revenue covers the annual fully loaded cost, you can afford the hire.
+
+But "can afford" isn't the right bar. The real question is: will this hire pay for themselves? If the hire frees you to take on two more clients per month at $3,000 each, that's $72,000 in new annual revenue for a $65,000 cost. The hire doesn't cost money. The hire makes money.
+
+<Highlight>
+A hire that frees you to generate revenue isn't an expense. It's the highest-ROI
+investment your business can make.
+</Highlight>
+
+According to the Bureau of Labor Statistics, employer costs for employee compensation averaged $46.14 per hour worked in Q3 2024. About 29.4% of that goes to benefits. But for a small business hiring its first employee, the real overhead is closer to 25-30% because you're likely not offering the full benefits package of a Fortune 500 company.
+
+Start simple. Salary, payroll taxes (7.65% FICA), workers' comp insurance (1-3%), and basic equipment. You can add health insurance, retirement matching, and other benefits as the business grows. Don't let the full cost of corporate employment scare you away from hiring at the level that makes sense for where you are now.
+
+<References items={citations} />
+</example>

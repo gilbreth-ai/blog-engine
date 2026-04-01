@@ -1,0 +1,107 @@
+<example>
+---
+title: "Understanding API Rate Limiting"
+description: "How rate limiting keeps your API alive under pressure, with practical implementation patterns and real-world benchmarks."
+slug: "api-rate-limiting"
+author: "Jordan Chen"
+seoTitle: "API Rate Limiting: Algorithms, Implementation, and Benchmarks"
+seoDescription: "Learn how token bucket, sliding window, and fixed window rate limiting work. Includes benchmarks, implementation checklist, and production deployment tips."
+seoKeywords:
+  - api rate limiting
+  - token bucket algorithm
+  - sliding window rate limiter
+  - rate limiting best practices
+  - api throttling
+  - http 429 too many requests
+  - rate limit middleware
+  - api gateway rate limiting
+  - rate limiting algorithms compared
+  - distributed rate limiting
+tags:
+  - api
+  - backend
+  - infrastructure
+readingTime: "8 min read"
+publishedAt: "2025-11-14"
+---
+
+export const faq = [
+  { q: "What's the difference between rate limiting and throttling?", a: "Rate limiting rejects excess requests immediately with a 429 response. Throttling queues them and processes at a controlled pace. Rate limiting protects your server. Throttling smooths traffic but adds latency. Most production APIs use rate limiting because queuing requests consumes memory." },
+  { q: "Should I rate limit internal APIs?", a: "Yes. Internal services cause more runaway traffic than external users. A retry loop bug in one microservice can generate thousands of requests per second. Internal rate limits catch cascading failures before they take down your infrastructure." },
+  { q: "What rate limit should I set?", a: "Monitor your traffic for one week. Find the 95th percentile request rate per endpoint. Set your limit at 2x that number. This gives headroom for organic growth while catching abuse. Adjust quarterly based on actual usage data." },
+  { q: "How do I rate limit in a distributed system?", a: "Use a centralized store like Redis. Each instance checks the shared counter before processing a request. Redis INCR with TTL handles token bucket natively. The latency overhead is 1-2ms per request, which is negligible compared to the protection it provides." },
+  { q: "What headers should rate-limited responses include?", a: "Three headers: X-RateLimit-Limit (max requests allowed), X-RateLimit-Remaining (requests left in window), and Retry-After (seconds until the limit resets). These let clients implement backoff automatically instead of hammering your server." },
+]
+
+export const citations = [
+  { name: "API Security Report 2024", author: "Cloudflare", url: "https://blog.cloudflare.com/api-security-report-2024" },
+  { name: "Rate Limiting Strategies and Techniques", author: "Stripe Engineering", url: "https://stripe.com/blog/rate-limiters" },
+  { name: "RFC 6585: Additional HTTP Status Codes", author: "IETF", url: "https://www.rfc-editor.org/rfc/rfc6585" },
+  { name: "Scaling to 100M Users", author: "Alex Xu", url: "https://bytebytego.com/courses/system-design-interview" },
+  { name: "Redis Best Practices for Rate Limiting", author: "Redis Inc.", url: "https://redis.io/solutions/rate-limiting" },
+]
+
+<LeadParagraph>
+Your API is getting 1,000 requests per second. Your server can handle 200.
+Without rate limiting, you're not just slow - you're down. A single unprotected
+endpoint brought down a mid-size fintech for 14 hours in 2024. The fix took
+20 minutes to deploy.
+</LeadParagraph>
+
+## Rate limiting costs less than downtime
+
+A 2024 Cloudflare report found that 67% of API outages trace back to missing or misconfigured rate limits. Not DDoS attacks. Not hardware failures. Just normal traffic from legitimate users exceeding what the server can handle.
+
+The math is straightforward. Downtime costs somewhere between $5,600 per minute (Gartner's often-cited average) and significantly more if you process payments. A rate limiter takes a day to implement and costs essentially nothing to run.
+
+<StatCard
+  value="67%"
+  label="of API outages stem from missing or misconfigured rate limits"
+  source="Cloudflare API Security Report 2024"
+  sourceUrl="https://blog.cloudflare.com/api-security-report-2024"
+/>
+
+But rate limiting isn't just about preventing outages. It's about fairness. Without limits, one heavy user can starve everyone else. Your power user running a data export shouldn't degrade the experience for thousands of normal users hitting your API.
+
+## How token bucket actually works
+
+Every rate limiting algorithm answers the same question: should this request go through? The differences are in how they count.
+
+Token bucket is the most widely used algorithm, and for good reason. Imagine a bucket that holds 100 tokens. Every second, 10 new tokens drop in. Each request takes one token. When the bucket is empty, requests get rejected. When traffic is light, tokens accumulate up to the maximum - which means short bursts are fine.
+
+<SVGDiagram
+  alt="Token bucket rate limiter flow: tokens refill at a fixed rate into a bucket with a maximum capacity. Each incoming request consumes one token. If tokens are available, the request passes through to the server. If the bucket is empty, the request receives a 429 response."
+  svg="<svg viewBox='0 0 680 300' xmlns='http://www.w3.org/2000/svg'><style>text{font-family:system-ui,sans-serif;font-size:14px;fill:#374151}.label{font-size:12px;fill:#6b7280}.box{fill:#f9fafb;stroke:#e5e7eb;stroke-width:1.5;rx:8}.accent{fill:var(--color-brand,#f97316)}@keyframes flow{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}.a1{animation:flow .4s ease .3s both}.a2{animation:flow .4s ease .7s both}.a3{animation:flow .4s ease 1.1s both}</style><rect class='box' x='20' y='80' width='120' height='60'/><text x='80' y='115' text-anchor='middle'>Requests</text><rect class='box a1' x='200' y='40' width='140' height='140'/><text x='270' y='100' text-anchor='middle' font-weight='600'>Token Bucket</text><text class='label' x='270' y='120' text-anchor='middle'>capacity: 100</text><text class='label' x='270' y='140' text-anchor='middle'>refill: 10/sec</text><rect class='box a2' x='420' y='50' width='120' height='60'/><text x='480' y='85' text-anchor='middle'>Server</text><rect class='box a2' x='420' y='160' width='120' height='60'/><text x='480' y='195' text-anchor='middle' fill='#dc2626'>429 Error</text><line x1='140' y1='110' x2='200' y2='110' stroke='#9ca3af' stroke-width='1.5' marker-end='url(#arrow)'/><line class='a3' x1='340' y1='80' x2='420' y2='80' stroke='#059669' stroke-width='1.5' marker-end='url(#arrow)'/><line class='a3' x1='340' y1='150' x2='420' y2='190' stroke='#dc2626' stroke-width='1.5' stroke-dasharray='6' marker-end='url(#arrow)'/><text class='label a3' x='380' y='70'>tokens > 0</text><text class='label a3' x='370' y='185'>tokens = 0</text><rect x='220' y='155' width='10' height='10' class='accent' rx='2'/><rect x='235' y='155' width='10' height='10' class='accent' rx='2' opacity='.7'/><rect x='250' y='155' width='10' height='10' class='accent' rx='2' opacity='.4'/><text class='label' x='270' y='165' text-anchor='middle'>tokens</text><defs><marker id='arrow' markerWidth='8' markerHeight='6' refX='8' refY='3' orient='auto'><path d='M0,0 L8,3 L0,6' fill='#9ca3af'/></marker></defs></svg>"
+  caption="Token bucket allows bursts up to bucket capacity, then enforces a steady rate"
+/>
+
+This burst tolerance is what makes token bucket practical. Real traffic isn't smooth. Users click, wait, click again. APIs get hit in waves. An algorithm that expects perfectly uniform traffic will reject legitimate requests constantly.
+
+## Three algorithms, three trade-offs
+
+Token bucket isn't the only option. Sliding window and fixed window solve the same problem differently. The right choice depends on what matters more to your application: simplicity, precision, or burst handling.
+
+<ComparisonTable
+  headers={["Characteristic", "Token Bucket", "Sliding Window", "Fixed Window"]}
+  rows={[
+    { label: "Burst handling", values: ["Allows short bursts up to bucket size", "Smooth distribution, no bursts", "Bursts at window boundaries"] },
+    { label: "Memory usage", values: ["O(1) - just a counter and timestamp", "O(n) - stores each request timestamp", "O(1) - counter per window"] },
+    { label: "Accuracy", values: ["Approximate over short intervals", "Precise per-request tracking", "Can allow 2x limit at boundaries"] },
+    { label: "Implementation", values: ["Simple: counter + last refill time", "Moderate: sorted set of timestamps", "Simplest: counter + window expiry"] },
+    { label: "Best for", values: ["General purpose APIs", "Financial/billing APIs", "Simple internal services"] },
+  ]}
+  highlightColumn={1}
+/>
+
+Fixed window has a subtle problem. If your limit is 100 requests per minute and a user sends 100 requests at 11:59:59 and 100 more at 12:00:01, they've sent 200 requests in 2 seconds - twice your intended limit. Sliding window fixes this by tracking individual request timestamps, but at the cost of memory.
+
+For most APIs, token bucket is the right starting point. It's simple, memory-efficient, and handles real-world traffic patterns gracefully. Switch to sliding window only if you need precise per-second enforcement - payment processing, billing APIs, or compliance-regulated endpoints.
+
+<Callout variant="warning" title="Don't rate limit health checks">
+Load balancers and monitoring tools hit health endpoints constantly. Rate limiting
+them triggers false downtime alerts. Exclude /health and /ready from your rate
+limiter, or set their limits so high they're effectively unlimited.
+</Callout>
+
+<References items={citations} />
+</example>
