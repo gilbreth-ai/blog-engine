@@ -1,9 +1,9 @@
 # Blog Engine
 
-> Turn a topic into a publish-ready blog post — with rich components, SVG thumbnails, and SEO structured data.
+> Turn a topic into a publish-ready blog post — with rich components, SVG thumbnails, and SEO/GEO structured data.
 > Just say what you want to write about. The rest is automatic.
 
-> 주제만 말하면 블로그 글이 완성됩니다 — 리서치, 컴포넌트, 썸네일, SEO까지 전부 자동.
+> 주제만 말하면 블로그 글이 완성됩니다 — 리서치, 컴포넌트, 썸네일, SEO/GEO까지 전부 자동.
 
 ---
 
@@ -11,9 +11,9 @@
 
 A [Claude Code](https://claude.ai/code) plugin that writes professional blog posts for you.
 
-You say a topic. It researches, writes a 2000+ word article with interactive components (comparison tables, animated diagrams, checklists), generates an SVG thumbnail, and saves everything ready to publish.
+You say a topic. It researches, writes a 2000+ word article with interactive components (comparison tables, animated diagrams, checklists), generates an SVG thumbnail, and saves everything ready to publish. All pages are 100% server-rendered (SSR) for maximum SEO performance.
 
-Claude Code 플러그인입니다. 주제를 말하면 자동으로 리서치하고, 2000자 이상의 글을 인터랙티브 컴포넌트(비교표, 애니메이션 다이어그램, 체크리스트)와 함께 작성하고, SVG 썸네일까지 만들어서 바로 배포할 수 있는 상태로 저장합니다.
+Claude Code 플러그인입니다. 주제를 말하면 자동으로 리서치하고, 2000자 이상의 글을 인터랙티브 컴포넌트와 함께 작성하고, SVG 썸네일까지 만들어서 바로 배포할 수 있는 상태로 저장합니다. 모든 페이지가 100% 서버 렌더링(SSR)이라 SEO 성능이 최대입니다.
 
 **No database. No CMS. No API keys.** Just MDX files in a Next.js project, deployed on Vercel.
 
@@ -35,7 +35,7 @@ Claude Code 플러그인입니다. 주제를 말하면 자동으로 리서치하
 claude plugin install blog-engine@github:storehaus/blog-engine
 ```
 
-That's it. The plugin adds three skills to your Claude Code.
+That's it. Three skills are added to your Claude Code.
 
 이 한 줄이면 됩니다. 세 가지 skill이 Claude Code에 추가됩니다.
 
@@ -47,19 +47,19 @@ Open Claude Code anywhere and run:
 /blog-engine:blog-setup my-blog
 ```
 
-Claude will ask you a few questions to personalize your blog:
+Claude asks a few questions to personalize your blog:
 - Brand/company name (브랜드 이름)
 - Blog title (블로그 제목)
-- One-line description (한 줄 설명)
+- One-line description for SEO (한 줄 설명)
 - Language (언어 — English, Korean, Japanese, etc.)
 - Who reads your blog (독자는 누구인지)
 - Writing tone (어떤 말투인지)
-- Brand color (브랜드 색상)
+- Brand color as hex code (브랜드 색상)
 - Author name (저자 이름)
 
-Then it scaffolds a complete Next.js blog with 21 interactive components, your brand colors, and your voice configured.
+Your answers are saved directly to `brand-voice.md` — the writer skill uses this on every post. No extra setup needed.
 
-그러면 21개 인터랙티브 컴포넌트가 포함된 Next.js 블로그가 만들어지고, 브랜드 색상과 톤이 적용됩니다.
+답변이 `brand-voice.md`에 바로 저장됩니다. 추가 설정 없이 첫 글부터 내 브랜드 톤으로 작성됩니다.
 
 ### Step 3: Write your first post / 첫 글 쓰기
 
@@ -73,10 +73,11 @@ Or in Korean:
 ```
 
 The skill will:
-1. **Research** — Search Google, analyze competitors, collect real data
-2. **Write** — 2000+ word MDX with rich components and structured data
-3. **Thumbnail** — Generate a hover-animated SVG thumbnail
-4. **Validate** — Check structure, quality, and native language quality
+1. **Auto-detect** — Language, topic type, brand voice (zero questions asked)
+2. **Research** — SERP analysis, competitor gaps, People Also Ask, 4-6 real statistics
+3. **Write** — 2000+ word MDX with rich components, FAQ schema, citations
+4. **Validate** — Structure gate, quality gate, native language gate
+5. **Thumbnail** — Hover-animated SVG, auto-generated
 
 Everything is saved automatically:
 - Post → `content/posts/how-to-choose-the-right-mechanical-keyboard.mdx`
@@ -89,9 +90,7 @@ cd my-blog
 pnpm dev
 ```
 
-Open `http://localhost:3000` — your blog is live locally with the post rendered.
-
-`http://localhost:3000`을 열면 글이 렌더링된 블로그를 볼 수 있습니다.
+Open `http://localhost:3000` — your blog with featured post, category filter, and 3-column grid.
 
 ### Step 5: Deploy / 배포
 
@@ -99,15 +98,23 @@ Open `http://localhost:3000` — your blog is live locally with the post rendere
 # Option A: Vercel CLI (one command)
 vercel deploy --prod
 
-# Option B: Connect to GitHub (auto-deploy on push)
-git remote add origin git@github.com:you/your-blog.git
-git push -u origin main
-# Then connect the repo on vercel.com/new
+# Option B: Connect to GitHub (auto-deploy on push — recommended)
+gh repo create my-company/blog --private --source=. --push
+# Then connect the repo at vercel.com/new
 ```
 
-After connecting to GitHub, every `git push` automatically deploys.
+**After deploying, set this environment variable:**
 
-GitHub에 연결하면 `git push`할 때마다 자동으로 배포됩니다.
+```bash
+vercel env add NEXT_PUBLIC_SITE_URL
+# Value: https://your-blog.vercel.app (or your custom domain)
+```
+
+This is required for sitemap, canonical URLs, og:image, and all JSON-LD structured data to use the correct domain.
+
+이 환경변수가 있어야 sitemap, canonical URL, og:image, JSON-LD가 올바른 도메인을 가리킵니다.
+
+After connecting to GitHub, every `git push` automatically deploys.
 
 ---
 
@@ -115,15 +122,11 @@ GitHub에 연결하면 `git push`할 때마다 자동으로 배포됩니다.
 
 ### `/blog-engine:blog-setup [name]`
 
-Scaffolds a new blog project. Asks personalization questions, creates Next.js project with components, configures your brand voice.
-
-새 블로그 프로젝트를 만듭니다. 브랜드 관련 질문을 하고, Next.js 프로젝트를 생성합니다.
+Scaffolds a new blog project. Asks personalization questions, creates Next.js project with 21 components, configures `brand-voice.md` from your answers.
 
 ### `/blog-engine:blog-writer [topic]`
 
-Writes a complete blog post. Researches the topic, writes MDX with rich components, generates a thumbnail. Zero questions asked — language is auto-detected from your message.
-
-블로그 글을 작성합니다. 주제를 리서치하고, 컴포넌트가 포함된 MDX를 작성하고, 썸네일까지 생성합니다. 질문 없이 바로 시작 — 언어는 메시지에서 자동 감지합니다.
+Writes a complete blog post with thumbnail. Researches the topic, writes MDX with rich components, generates SVG thumbnail. Zero questions — language auto-detected.
 
 **Examples:**
 ```
@@ -134,25 +137,73 @@ Writes a complete blog post. Researches the topic, writes MDX with rich componen
 
 ### `/blog-engine:blog-thumbnail [title]`
 
-Generates (or regenerates) an SVG thumbnail for a post. Hover-animated, brand-colored, vector-perfect at any size.
+Regenerates an SVG thumbnail for a post. Use when you want a different visual.
 
-SVG 썸네일을 생성합니다. 호버 애니메이션, 브랜드 색상, 벡터라서 어떤 크기에서도 선명합니다.
+---
+
+## SEO / GEO / SEO/GEO 최적화
+
+The blog's primary purpose is search ranking. Every detail is optimized:
+
+### Server-Side Rendering (SSR)
+
+All pages are React Server Components — zero `"use client"` at page level. Search engines and AI engines receive fully rendered HTML with all content, structured data, and meta tags.
+
+모든 페이지가 서버 컴포넌트입니다. 검색엔진과 AI 엔진이 완전히 렌더링된 HTML을 받습니다.
+
+### Structured Data (JSON-LD)
+
+Every blog post generates a comprehensive `@graph` with:
+
+| Schema | Purpose |
+|--------|---------|
+| `WebSite` | Site-level identity for AI engine trust signals |
+| `BlogPosting` | Full article metadata with `dateModified`, `wordCount`, `inLanguage`, `articleSection` |
+| `BreadcrumbList` | SERP navigation (Home > Blog > Post Title) |
+| `FAQPage` | Google featured snippets from FAQ export (5-6 Q&A) |
+| `HowTo` | Google rich results for tutorial posts |
+| `citation` | Source verification for GEO — AI engines check these |
+| `speakable` | Marks LeadParagraph, KeyTakeaway, Highlight for voice assistants |
+| `isPartOf` | Links posts to blog entity for topical authority |
+
+### SEO Infrastructure
+
+| Feature | File |
+|---------|------|
+| Dynamic sitemap | `app/sitemap.ts` — auto-discovers all posts |
+| robots.txt | `app/robots.ts` — allows all crawlers, points to sitemap |
+| Canonical URLs | Set on every page via `alternates.canonical` |
+| OpenGraph | title, description, type=article, publishedTime, image |
+| Twitter Cards | summary_large_image with title, description, image |
+| Meta keywords | 10 SEO keywords per post |
+| `<time datetime>` | Machine-readable publication dates |
+| Image alt text | Post title on every thumbnail |
+| Internal linking | Writer skill auto-links between existing posts |
+
+### Content SEO
+
+| Feature | How |
+|---------|-----|
+| SERP gap analysis | Every post researches top 5 competitors before writing |
+| People Also Ask | FAQ schema sourced from real PAA queries |
+| Keyword optimization | 10 targeted keywords in frontmatter |
+| Fresh content signal | `updatedAt` field in frontmatter → `dateModified` in schema |
+| E-E-A-T | Author schema, real citations, verifiable statistics |
 
 ---
 
 ## What's in a blog post? / 블로그 글에 뭐가 들어가나요?
 
-Every post includes:
-
 | Feature | Description |
 |---------|-------------|
 | **Rich MDX components** | Comparison tables, animated SVG diagrams, interactive checklists, stat cards, process flows, callouts, and more (21 types) |
-| **SEO structured data** | FAQ schema (5-6 Q&A for Google snippets), HowTo schema for tutorials, Article schema |
-| **Research-backed content** | Every claim backed by real statistics and named sources — not AI speculation |
-| **Native-quality language** | Writes like a native speaker. AI-specific patterns are explicitly blocked per language |
-| **SVG thumbnail** | Hover-animated, brand-colored, 2-5KB (vs 200KB+ for raster images) |
+| **SEO structured data** | BlogPosting + FAQPage + HowTo + BreadcrumbList + citations + speakable |
+| **Research-backed content** | Every claim backed by real statistics and named sources |
+| **Native-quality language** | Writes like a native speaker. AI patterns explicitly blocked per language (EN/KR/JP) |
+| **SVG thumbnail** | Hover-animated, brand-colored, 2-5KB vector |
+| **Internal links** | Auto-links to existing posts for SEO authority distribution |
 
-### Components included / 포함된 컴포넌트
+### Components / 포함된 컴포넌트
 
 **Required** (every post): LeadParagraph, Highlight, References
 
@@ -165,13 +216,21 @@ ComparisonTable, SVGDiagram, Callout, KeyTakeaway, ProcessFlow, StatCard, Checkl
 
 ---
 
+## Blog Home Layout / 블로그 홈 레이아웃
+
+The home page follows a proven blog layout:
+- **Category filter** at the top (auto-generated from post tags)
+- **Featured/pinned post** — full-width hero card
+- **3-column grid** for remaining posts (responsive: 2 on tablet, 1 on mobile)
+- Each card shows: thumbnail, category, title, description, date, reading time
+
+---
+
 ## Customization / 커스터마이징
 
 ### Brand Voice / 브랜드 톤 (Easy)
 
-Edit `brand-voice.md` in your project root. This file is created during setup with your answers, but you can edit it anytime:
-
-`brand-voice.md`를 수정하세요. 설치 때 답변으로 자동 생성되지만, 언제든 수정할 수 있습니다:
+Edit `brand-voice.md` in your project root (created during setup):
 
 ```markdown
 ## Reader
@@ -194,23 +253,19 @@ Change one CSS variable in `app/globals.css`:
 
 ```css
 :root {
-  --color-brand: #2b8a3e; /* ← change this */
+  --color-brand: #2b8a3e; /* change this */
 }
 ```
 
 All 21 components and thumbnails automatically follow the new color.
 
-모든 21개 컴포넌트와 썸네일이 자동으로 새 색상을 따릅니다.
-
 ### Typography / 타이포그래피 (Easy)
 
-Fonts are in `app/layout.tsx`. Default: Instrument Serif (headings), Source Serif 4 (body), JetBrains Mono (code). Change them to any Google Font.
+Fonts are in `app/layout.tsx`. Default: Instrument Serif (headings), Source Serif 4 (body), JetBrains Mono (code).
 
 ### Component Design / 컴포넌트 디자인 (Medium)
 
-Edit any component in `components/mdx/`. All use Tailwind CSS — a designer can freely change colors, spacing, borders, shadows.
-
-`components/mdx/` 안의 컴포넌트를 수정하세요. 전부 Tailwind CSS라서 디자이너가 자유롭게 바꿀 수 있습니다.
+Edit any component in `components/mdx/`. All use Tailwind CSS.
 
 ---
 
@@ -237,8 +292,9 @@ You: "How to choose a mechanical keyboard"
          ┌────────▼───────────┐
          │      WRITE         │
          │ 2000+ word MDX     │
-         │ 8-12 components    │
+         │ Rich components    │
          │ FAQ + citations    │
+         │ Internal links     │
          └────────┬───────────┘
                   │
          ┌────────▼───────────┐
@@ -257,83 +313,83 @@ You: "How to choose a mechanical keyboard"
                   ▼
     content/posts/slug.mdx ✓
     public/blog/thumbnails/slug.svg ✓
+    JSON-LD: BlogPosting + FAQ + HowTo + BreadcrumbList ✓
 ```
 
 ---
 
 ## Project Structure / 프로젝트 구조
 
-After setup, your blog looks like this:
-
 ```
 my-blog/
 ├── app/
 │   ├── layout.tsx              ← Root layout (fonts, colors, header/footer)
-│   ├── page.tsx                ← Home (post listing grid)
-│   ├── blog/[slug]/page.tsx    ← Post detail (MDX + TOC + JSON-LD)
+│   ├── page.tsx                ← Home (featured post + category filter + 3-col grid)
+│   ├── blog/[slug]/page.tsx    ← Post detail (MDX + TOC + JSON-LD @graph)
+│   ├── sitemap.ts              ← Dynamic sitemap for search engines
+│   ├── robots.ts               ← Crawl directives + sitemap location
 │   └── globals.css             ← Design tokens (brand color, fonts)
 ├── components/mdx/             ← 21 interactive components
 ├── lib/
-│   ├── mdx.ts                  ← MDX renderer + component registry
+│   ├── mdx.ts                  ← MDX renderer + component registry + heading IDs
 │   └── palette.ts              ← Chart color palette
 ├── content/posts/              ← Your blog posts (MDX files)
 ├── public/blog/thumbnails/     ← Your thumbnails (SVG files)
-├── brand-voice.md              ← Your brand voice config
+├── brand-voice.md              ← Your brand voice config (auto-generated at setup)
 ├── package.json
-└── tailwind.config.ts
+├── tailwind.config.ts
+└── postcss.config.mjs
 ```
 
 ---
 
-## Deployment Options / 배포 방법
+## Deployment / 배포 방법
 
 ### Vercel (Recommended / 추천)
 
 ```bash
-# One-time: install Vercel CLI
+# One-time setup
 npm i -g vercel
+vercel login
 
 # Deploy
 vercel deploy --prod
+
+# Set your domain for SEO (required)
+vercel env add NEXT_PUBLIC_SITE_URL
+# Value: https://your-domain.com
 ```
 
-Or connect your GitHub repo at [vercel.com/new](https://vercel.com/new) for automatic deploys on every push.
+Or connect your GitHub repo at [vercel.com/new](https://vercel.com/new) for automatic deploys on every `git push`.
 
 ### Other platforms
 
-The blog is a standard Next.js project. It works on any platform that supports Next.js:
-- [Netlify](https://netlify.com)
-- [Cloudflare Pages](https://pages.cloudflare.com)
-- Self-hosted with `pnpm build && pnpm start`
+Standard Next.js project — works on Netlify, Cloudflare Pages, or self-hosted with `pnpm build && pnpm start`.
 
 ---
 
 ## FAQ
 
 **Do I need a database?**
-No. Posts are MDX files, thumbnails are SVGs. Everything lives in your git repo. No Supabase, no Postgres, no CMS.
-
-데이터베이스가 필요한가요? 아닙니다. 글은 MDX 파일, 썸네일은 SVG 파일입니다. 전부 git repo에 저장됩니다.
+No. Posts are MDX files, thumbnails are SVGs. Everything lives in your git repo.
 
 **Does it cost money?**
-The plugin is free (MIT license). You need a Claude Code subscription to run it. Vercel free tier handles most blogs.
-
-비용이 드나요? 플러그인은 무료입니다 (MIT). Claude Code 구독이 필요하고, Vercel 무료 플랜이면 대부분의 블로그에 충분합니다.
+The plugin is free (MIT). You need a Claude Code subscription. Vercel free tier handles most blogs.
 
 **What languages are supported?**
-English, Korean, and Japanese have deep native-quality rules. Other languages work with universal quality rules. The skill auto-detects language from your message.
+English, Korean, and Japanese have deep native-quality rules with AI pattern blocking. Other languages work with universal rules. Language auto-detected from your message.
 
-어떤 언어를 지원하나요? 영어, 한국어, 일본어는 깊은 네이티브 규칙이 있습니다. 다른 언어도 범용 규칙으로 동작합니다. 언어는 메시지에서 자동 감지합니다.
+**Is everything server-rendered?**
+Yes. All pages are React Server Components. No `"use client"` at page level. Search engines receive complete HTML with all structured data.
 
 **Can I use my own components?**
-Yes. Add new components to `components/mdx/`, register them in `lib/mdx.ts`, and describe them in a custom component-registry section in `brand-voice.md`. The writer skill will use them.
+Yes. Add to `components/mdx/`, register in `lib/mdx.ts`, describe in `brand-voice.md`.
 
-나만의 컴포넌트를 쓸 수 있나요? 네. `components/mdx/`에 추가하고 `lib/mdx.ts`에 등록하면 됩니다.
+**Can I edit generated posts?**
+Of course. They're MDX files — edit in any editor or Claude Code.
 
-**Can I edit the generated posts?**
-Of course. They're MDX files — edit them in any text editor or in Claude Code. The components are just React JSX.
-
-생성된 글을 수정할 수 있나요? 당연합니다. MDX 파일이라 아무 에디터에서나 수정 가능합니다.
+**How does GEO work?**
+Every post generates comprehensive JSON-LD (`@graph` with BlogPosting, FAQPage, HowTo, citations, speakable). AI engines like Google SGE, Perplexity, and ChatGPT Search use this structured data to cite your content.
 
 ---
 
