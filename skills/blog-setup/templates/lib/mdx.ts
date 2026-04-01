@@ -25,32 +25,57 @@ import { SVGDiagram } from "@/components/mdx/svg-diagram";
 import { Timeline } from "@/components/mdx/timeline";
 import { TwoColumn } from "@/components/mdx/two-column";
 
+/* ─── Auto-ID headings for TOC anchor links ───────────── */
+
+import React from "react";
+
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9\u3131-\u318e\uac00-\ud7a3]+/g, "-")
+    .replace(/(^-|-$)/g, "") || "heading";
+}
+
+function createHeading(level: number) {
+  const Tag = `h${level}` as keyof JSX.IntrinsicElements;
+  return function HeadingWithId(props: { children?: React.ReactNode }) {
+    const text = typeof props.children === "string"
+      ? props.children
+      : String(props.children ?? "");
+    const id = slugify(text);
+    return React.createElement(Tag, { id, ...props });
+  };
+}
+
 /**
  * MDX component registry — maps component names used in MDX files
- * to their React implementations.
+ * to their React implementations. Includes auto-ID headings for TOC.
  */
-export const MDX_COMPONENTS: Record<string, React.ComponentType<Record<string, unknown>>> = {
-  AccordionGroup: AccordionGroup as React.ComponentType<Record<string, unknown>>,
-  Callout: Callout as React.ComponentType<Record<string, unknown>>,
-  Chart: Chart as React.ComponentType<Record<string, unknown>>,
-  Checklist: Checklist as React.ComponentType<Record<string, unknown>>,
-  ComparisonTable: ComparisonTable as React.ComponentType<Record<string, unknown>>,
-  DefinitionCard: DefinitionCard as React.ComponentType<Record<string, unknown>>,
-  FullBleed: FullBleed as React.ComponentType<Record<string, unknown>>,
-  Highlight: Highlight as React.ComponentType<Record<string, unknown>>,
-  ImageWithCaption: ImageWithCaption as React.ComponentType<Record<string, unknown>>,
-  KeyTakeaway: KeyTakeaway as React.ComponentType<Record<string, unknown>>,
-  LeadParagraph: LeadParagraph as React.ComponentType<Record<string, unknown>>,
-  PriceBreakdown: PriceBreakdown as React.ComponentType<Record<string, unknown>>,
-  ProConCard: ProConCard as React.ComponentType<Record<string, unknown>>,
-  ProcessFlow: ProcessFlow as React.ComponentType<Record<string, unknown>>,
-  QuoteBlock: QuoteBlock as React.ComponentType<Record<string, unknown>>,
-  References: References as React.ComponentType<Record<string, unknown>>,
-  SectionDivider: SectionDivider as React.ComponentType<Record<string, unknown>>,
-  StatCard: StatCard as React.ComponentType<Record<string, unknown>>,
-  SVGDiagram: SVGDiagram as React.ComponentType<Record<string, unknown>>,
-  Timeline: Timeline as React.ComponentType<Record<string, unknown>>,
-  TwoColumn: TwoColumn as React.ComponentType<Record<string, unknown>>,
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const MDX_COMPONENTS: Record<string, React.ComponentType<any>> = {
+  h2: createHeading(2),
+  h3: createHeading(3),
+  AccordionGroup,
+  Callout,
+  Chart,
+  Checklist,
+  ComparisonTable,
+  DefinitionCard,
+  FullBleed,
+  Highlight,
+  ImageWithCaption,
+  KeyTakeaway,
+  LeadParagraph,
+  PriceBreakdown,
+  ProConCard,
+  ProcessFlow,
+  QuoteBlock,
+  References,
+  SectionDivider,
+  StatCard,
+  SVGDiagram,
+  Timeline,
+  TwoColumn,
 };
 
 /* ─── Types ─────────────────────────────────────────────── */
@@ -75,16 +100,21 @@ interface HowToStep {
 
 export function extractHeadings(source: string): Heading[] {
   const headings: Heading[] = [];
+  const seen = new Map<string, number>();
   const lines = source.split("\n");
   for (const line of lines) {
     const match = line.match(/^(#{2,3})\s+(.+)$/);
     if (match) {
       const level = match[1].length;
       const text = match[2].trim();
-      const id = text
+      let id = text
         .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/[^a-z0-9\u3131-\u318e\uac00-\ud7a3]+/g, "-")
         .replace(/(^-|-$)/g, "");
+      if (!id) id = "heading";
+      const count = seen.get(id) ?? 0;
+      seen.set(id, count + 1);
+      if (count > 0) id = `${id}-${count}`;
       headings.push({ level, text, id });
     }
   }
@@ -108,8 +138,9 @@ export async function getMDXContent(filePath: string) {
   const raw = fs.readFileSync(filePath, "utf-8");
   const { content } = matter(raw);
 
-  const result = await evaluate(content, {
-    ...(runtime as Record<string, unknown>),
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const result = await (evaluate as any)(content, {
+    ...runtime,
     useMDXComponents: () => MDX_COMPONENTS,
   });
 

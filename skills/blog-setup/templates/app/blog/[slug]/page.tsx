@@ -233,9 +233,9 @@ export default async function PostPage({
         )}
 
         {/* Content + TOC */}
-        <div className="relative lg:grid lg:grid-cols-[1fr_200px] lg:gap-12">
+        <div className="relative lg:grid lg:grid-cols-[1fr_220px] lg:gap-16">
           {/* Main content */}
-          <div className="prose prose-lg max-w-[680px]">
+          <div className="prose prose-lg max-w-none">
             <MDXContent />
           </div>
 

@@ -40,7 +40,7 @@ export default function RootLayout({
       className={`${instrumentSerif.variable} ${sourceSerif.variable} ${jetbrainsMono.variable}`}
     >
       <body className="flex min-h-screen flex-col bg-[var(--color-bg)] text-[var(--color-text)] antialiased">
-        <header className="mx-auto flex w-full max-w-[680px] items-center justify-between px-6 py-8">
+        <header className="mx-auto flex w-full max-w-[960px] items-center justify-between px-6 py-8">
           <a
             href="/"
             className="font-[family-name:var(--font-heading)] text-2xl tracking-tight text-[var(--color-text)] no-underline transition-opacity hover:opacity-70"
@@ -57,7 +57,7 @@ export default function RootLayout({
           </nav>
         </header>
 
-        <main className="mx-auto w-full max-w-[680px] flex-1 px-6 pb-20">{children}</main>
+        <main className="mx-auto w-full max-w-[960px] flex-1 px-6 pb-20">{children}</main>
 
         <footer className="border-t border-[var(--color-border)] py-10 text-center text-sm text-[var(--color-muted)]">
           <p>&copy; {new Date().getFullYear()}</p>
