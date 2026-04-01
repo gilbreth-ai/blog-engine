@@ -10,8 +10,8 @@ html {
 /* ─── Design Tokens ─────────────────────────────────────── */
 :root {
   --color-brand: #e8590c;
-  --color-bg: #faf9f7;
-  --color-text: #1a1a1a;
+  --color-bg: #ffffff;
+  --color-text: #111111;
   --color-muted: #868e96;
   --color-border: #e9ecef;
   --color-surface: #f8f9fa;

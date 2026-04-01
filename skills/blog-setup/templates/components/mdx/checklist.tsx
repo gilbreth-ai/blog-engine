@@ -26,7 +26,7 @@ export function Checklist({ items: initialItems, title }: ChecklistProps) {
   }
 
   return (
-    <div className="not-prose my-10 rounded-lg border border-gray-200 bg-white p-5">
+    <div className="not-prose rounded-lg border border-gray-200 bg-white p-5">
       {title && (
         <h3 className="mb-4 text-sm font-bold text-gray-900">{title}</h3>
       )}

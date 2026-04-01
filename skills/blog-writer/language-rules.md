@@ -60,6 +60,20 @@ These patterns appear so frequently in AI output that they've become tells. Thei
 - **単調な文末** - 毎文「~です。~ます。~です。~ます。」これは機械的に聞こえます。文末のバリエーションを増やしてください。
 - **カタカナ語の過剰使用** - 「コンプリヘンシブ」「レバレッジ」などは日本語として定着していません。和語や漢語で言い換えてください。
 
+## Language Mixing Rule (CRITICAL)
+
+Never mix languages within a post. If the post is in Korean, write everything in Korean. If in English, everything in English. The only exceptions:
+- Proper nouns (brand names, product names, person names)
+- Technical terms with no widely-accepted translation (API, SDK, URL, etc.)
+- Quoted foreign phrases that are the subject being discussed
+
+Specifically:
+- Korean posts: Do NOT randomly insert English words like "insight", "feedback", "tip" when perfectly good Korean words exist (통찰, 의견, 조언). Do NOT write headings in English when the body is Korean.
+- English posts: Do NOT insert Korean/Japanese terms unless explaining them.
+- Japanese posts: Minimize unnecessary katakana loan words when native Japanese alternatives exist.
+
+Why: Language mixing is the #1 signal of AI-generated content in multilingual markets. Native writers naturally stay in one language. AI constantly code-switches because its training data mixes languages.
+
 ## Universal Rule
 
 Read every sentence aloud. If a native speaker would pause, frown, or rephrase it, rewrite it. This applies to every language. Grammar checkers catch errors. Only a native ear catches unnaturalness.

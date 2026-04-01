@@ -112,13 +112,13 @@ function CleanBarChart({ data, height }: { data: ChartDataPoint[]; height: numbe
       <BarChart data={enriched} margin={{ top: 16, right: 4, bottom: 0, left: -8 }} barCategoryGap="25%">
         <XAxis
           dataKey="label"
-          tick={{ fontSize: 11, fill: "#9ca3af" }}
+          tick={{ fontSize: 11, fill: "#4b5563", fontWeight: 500 }}
           tickLine={false}
           axisLine={false}
           interval={0}
         />
         <YAxis
-          tick={{ fontSize: 10, fill: "#d1d5db" }}
+          tick={{ fontSize: 10, fill: "#6b7280", fontWeight: 500 }}
           tickLine={false}
           axisLine={false}
           width={36}
@@ -192,8 +192,8 @@ function CleanLineChart({ data, height }: { data: ChartDataPoint[]; height: numb
   return (
     <ResponsiveContainer width="100%" height={height}>
       <LineChart data={data} margin={{ top: 16, right: 12, bottom: 0, left: 0 }}>
-        <XAxis dataKey="label" tick={{ fontSize: 11, fill: "#9ca3af" }} tickLine={{ stroke: "transparent" }} tickSize={20} axisLine={false} />
-        <YAxis tick={{ fontSize: 10, fill: "#d1d5db" }} tickLine={false} axisLine={false} width={36} tickSize={20}/>
+        <XAxis dataKey="label" tick={{ fontSize: 11, fill: "#4b5563", fontWeight: 500 }} tickLine={{ stroke: "transparent" }} tickSize={20} axisLine={false} />
+        <YAxis tick={{ fontSize: 10, fill: "#6b7280", fontWeight: 500 }} tickLine={false} axisLine={false} width={36} tickSize={20}/>
         <Tooltip content={<ChartTooltip />} />
         <Line
           type="monotone"
@@ -223,8 +223,8 @@ function CleanAreaChart({ data, height }: { data: ChartDataPoint[]; height: numb
             <stop offset="100%" stopColor={color} stopOpacity={0.01} />
           </linearGradient>
         </defs>
-        <XAxis dataKey="label" tick={{ fontSize: 11, fill: "#9ca3af" }} tickLine={{ stroke: "transparent" }} tickSize={20} axisLine={false} />
-        <YAxis tick={{ fontSize: 10, fill: "#d1d5db" }} tickLine={false} axisLine={false} width={36} tickSize={20}/>
+        <XAxis dataKey="label" tick={{ fontSize: 11, fill: "#4b5563", fontWeight: 500 }} tickLine={{ stroke: "transparent" }} tickSize={20} axisLine={false} />
+        <YAxis tick={{ fontSize: 10, fill: "#6b7280", fontWeight: 500 }} tickLine={false} axisLine={false} width={36} tickSize={20}/>
         <Tooltip content={<ChartTooltip />} />
         <Area
           type="monotone"

@@ -15,7 +15,7 @@ interface AccordionGroupProps {
 
 export function AccordionGroup({ items, title }: AccordionGroupProps) {
   return (
-    <div className="not-prose my-10">
+    <div className="not-prose">
       {title && (
         <h3 className="mb-4 text-lg font-bold text-gray-900">{title}</h3>
       )}
