@@ -80,7 +80,7 @@ Inline SVG illustration for flows, architectures, or visual explanations.
 
 **SVG authoring guidelines:**
 - **viewBox**: Always `0 0 680 [height]`. 680px wide fits content containers without scaling issues.
-- **Colors**: Use `var(--color-brand, #f97316)` for the primary accent. Use `#374151` for text, `#e5e7eb` for borders, `#f9fafb` for fills. This ensures diagrams adapt to any brand theme.
+- **Colors**: Use `var(--color-brand, #e8590c)` for the primary accent. Use `#374151` for text, `#e5e7eb` for borders, `#f9fafb` for fills. This ensures diagrams adapt to any brand theme.
 - **Typography**: `font-family: system-ui, sans-serif`. Size 14px for labels, 12px for annotations.
 - **Animation**: Use CSS `@keyframes` inside a `<style>` tag, not SMIL attributes (`animate`, `animateTransform`). SMIL has inconsistent browser support. Cascade delays at 0.3s, 0.7s, 1.1s for sequential reveals.
 - **Accessibility**: The `alt` prop must be 2-3 sentences describing the full diagram for screen readers. Not just "diagram" - describe what it shows and what the reader should take away.
