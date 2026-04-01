@@ -118,4 +118,16 @@ Would you send this to a friend as a genuinely useful read? Is every claim backe
 **Gate 3: Language**
 Read every sentence as a native speaker. Does anything sound translated, robotic, or formulaic? Is sentence length varied - short punches mixed with longer explanations? Are there zero AI convergence patterns ("In this article", "Let's dive in", "comprehensive", "leverage")? Is the register consistent throughout - no sudden shifts between casual and formal tone?
 
+### Phase 4: THUMBNAIL
+
+After saving the post, automatically generate a matching SVG thumbnail. Read the blog-thumbnail skill's [design-system.md](../blog-thumbnail/design-system.md) and study the reference SVGs in [../blog-thumbnail/examples/](../blog-thumbnail/examples/).
+
+1. Choose a visual metaphor that communicates the post's core concept
+2. Check `brand-voice.md` for primaryColor - use it instead of default orange if present
+3. Generate SVG following the design system rules (viewBox 680x425, hover animations, physical objects, 3-4 colors)
+4. Self-validate: composition size, centering, hover animations, static completeness
+5. Save to `public/blog/thumbnails/{slug}.svg`
+
+Tell the user: "Post saved to content/posts/{slug}.mdx with thumbnail at public/blog/thumbnails/{slug}.svg"
+
 </workflow>
