@@ -1,0 +1,157 @@
+<svg viewBox="0 0 680 425" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    /* Compass — direction, strategy, "how to choose" posts
+       Composition: compass body centered at (340, 212)
+       Outer ring r=140, total diameter 280px (>50% of 680)
+       Height spans ~280px (>60% of 425) */
+
+    .outer-ring {
+      fill: white;
+      stroke: #cbd5e1;
+      stroke-width: 2.5;
+      transition: stroke 0.4s ease;
+    }
+    .inner-ring {
+      fill: none;
+      stroke: #e5e7eb;
+      stroke-width: 1.5;
+      transition: stroke 0.4s ease;
+    }
+    .tick-major {
+      stroke: #374151;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      transition: stroke 0.4s ease;
+    }
+    .tick-minor {
+      stroke: #cbd5e1;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      transition: stroke 0.4s ease;
+    }
+    .needle-north {
+      fill: #e8590c;
+      stroke: none;
+      transition: fill 0.3s ease;
+    }
+    .needle-south {
+      fill: #cbd5e1;
+      stroke: none;
+      transition: fill 0.3s ease;
+    }
+    .needle-center {
+      fill: white;
+      stroke: #374151;
+      stroke-width: 2;
+      transition: stroke 0.4s ease;
+    }
+    .degree-dots {
+      fill: #e5e7eb;
+      transition: fill 0.4s ease;
+    }
+    .ground-shadow {
+      fill: #e5e7eb;
+      opacity: 0.4;
+      transition: opacity 0.4s ease;
+    }
+
+    /* Needle group — rotates on hover to "find north" */
+    .needle-group {
+      transform-origin: 340px 212px;
+      transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* Hover: compass activates */
+    svg:hover .outer-ring {
+      stroke: #f4a67a;
+    }
+    svg:hover .inner-ring {
+      stroke: #f4a67a;
+    }
+    svg:hover .tick-major {
+      stroke: #e8590c;
+    }
+    svg:hover .tick-minor {
+      stroke: #f4a67a;
+    }
+    svg:hover .needle-group {
+      transform: rotate(-30deg);
+    }
+    svg:hover .needle-center {
+      stroke: #e8590c;
+    }
+    svg:hover .degree-dots {
+      fill: #f4a67a;
+    }
+    svg:hover .ground-shadow {
+      opacity: 0.6;
+    }
+
+    /* Subtle ring pulse on hover — accent decoration */
+    @keyframes ringPulse {
+      0%, 100% { r: 145; opacity: 0; }
+      50% { r: 155; opacity: 0.3; }
+    }
+    .pulse-ring {
+      fill: none;
+      stroke: #e8590c;
+      stroke-width: 1;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    svg:hover .pulse-ring {
+      animation: ringPulse 2s ease-in-out infinite;
+    }
+  </style>
+
+  <!-- Ground shadow -->
+  <ellipse class="ground-shadow" cx="340" cy="375" rx="90" ry="7"/>
+
+  <!-- Pulse ring — accent decoration, hidden at rest -->
+  <circle class="pulse-ring" cx="340" cy="212" r="145"/>
+
+  <!-- Outer compass ring -->
+  <circle class="outer-ring" cx="340" cy="212" r="140"/>
+
+  <!-- Inner ring for depth -->
+  <circle class="inner-ring" cx="340" cy="212" r="120"/>
+
+  <!-- Major ticks — N, E, S, W (short bold lines, no text) -->
+  <!-- North -->
+  <line class="tick-major" x1="340" y1="78" x2="340" y2="100"/>
+  <!-- East -->
+  <line class="tick-major" x1="474" y1="212" x2="452" y2="212"/>
+  <!-- South -->
+  <line class="tick-major" x1="340" y1="346" x2="340" y2="324"/>
+  <!-- West -->
+  <line class="tick-major" x1="206" y1="212" x2="228" y2="212"/>
+
+  <!-- Minor ticks — NE, SE, SW, NW -->
+  <!-- NE -->
+  <line class="tick-minor" x1="435" y1="117" x2="420" y2="132"/>
+  <!-- SE -->
+  <line class="tick-minor" x1="435" y1="307" x2="420" y2="292"/>
+  <!-- SW -->
+  <line class="tick-minor" x1="245" y1="307" x2="260" y2="292"/>
+  <!-- NW -->
+  <line class="tick-minor" x1="245" y1="117" x2="260" y2="132"/>
+
+  <!-- Small degree dots between major ticks -->
+  <circle class="degree-dots" cx="370" cy="76" r="2.5"/>
+  <circle class="degree-dots" cx="400" cy="85" r="2.5"/>
+  <circle class="degree-dots" cx="310" cy="76" r="2.5"/>
+  <circle class="degree-dots" cx="280" cy="85" r="2.5"/>
+
+  <!-- Compass needle — rotates as a group on hover -->
+  <g class="needle-group">
+    <!-- North half (brand accent, points up) -->
+    <polygon class="needle-north" points="340,105 330,212 350,212"/>
+    <!-- South half (gray, points down) -->
+    <polygon class="needle-south" points="340,319 330,212 350,212"/>
+    <!-- Center pivot -->
+    <circle class="needle-center" cx="340" cy="212" r="8"/>
+  </g>
+
+  <!-- Inner decorative circle at center -->
+  <circle cx="340" cy="212" r="3" fill="#374151"/>
+</svg>

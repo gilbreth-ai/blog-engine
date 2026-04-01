@@ -1,0 +1,140 @@
+<svg viewBox="0 0 680 425" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    /* Lightbulb — ideas, insights, "understanding" posts
+       Composition: bulb centered at ~(340, 195), base at ~(340, 310)
+       Total height ~255px, width ~180px bulb + rays extend to ~360px */
+
+    .bulb-glass {
+      fill: white;
+      stroke: #cbd5e1;
+      stroke-width: 2.5;
+      transition: stroke 0.4s ease, fill 0.5s ease;
+    }
+    .bulb-base {
+      fill: #f9fafb;
+      stroke: #cbd5e1;
+      stroke-width: 2;
+      transition: stroke 0.4s ease;
+    }
+    .base-ring {
+      fill: none;
+      stroke: #e5e7eb;
+      stroke-width: 2;
+      transition: stroke 0.4s ease;
+    }
+    .filament {
+      fill: none;
+      stroke: #cbd5e1;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      transition: stroke 0.4s ease;
+    }
+    .filament-dot {
+      fill: #cbd5e1;
+      transition: fill 0.4s ease;
+    }
+    .ray {
+      stroke: #e5e7eb;
+      stroke-width: 2;
+      stroke-linecap: round;
+      opacity: 0.4;
+      transition: opacity 0.4s ease, stroke 0.4s ease, transform 0.5s ease;
+    }
+    .ground-shadow {
+      fill: #e5e7eb;
+      opacity: 0.4;
+      transition: opacity 0.4s ease;
+    }
+
+    /* Hover: bulb "lights up" */
+    svg:hover .bulb-glass {
+      stroke: #f4a67a;
+      fill: #fef7f0;
+    }
+    svg:hover .bulb-base {
+      stroke: #f4a67a;
+    }
+    svg:hover .base-ring {
+      stroke: #f4a67a;
+    }
+    svg:hover .filament {
+      stroke: #e8590c;
+    }
+    svg:hover .filament-dot {
+      fill: #e8590c;
+    }
+    svg:hover .ray {
+      opacity: 0.9;
+      stroke: #e8590c;
+    }
+    svg:hover .ground-shadow {
+      opacity: 0.6;
+    }
+
+    /* Staggered ray extension on hover */
+    svg:hover .ray-1 { transform: translateY(-6px); transition-delay: 0s; }
+    svg:hover .ray-2 { transform: translate(4px, -4px); transition-delay: 0.08s; }
+    svg:hover .ray-3 { transform: translate(4px, 4px); transition-delay: 0.16s; }
+    svg:hover .ray-4 { transform: translateY(6px); transition-delay: 0.08s; }
+    svg:hover .ray-5 { transform: translate(-4px, 4px); transition-delay: 0.16s; }
+    svg:hover .ray-6 { transform: translate(-4px, -4px); transition-delay: 0.08s; }
+
+    /* Filament glow pulse */
+    @keyframes glow {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.7; }
+    }
+    .glow-ring {
+      fill: #e8590c;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    svg:hover .glow-ring {
+      animation: glow 2s ease-in-out infinite;
+      opacity: 0.3;
+    }
+  </style>
+
+  <!-- Ground shadow for depth -->
+  <ellipse class="ground-shadow" cx="340" cy="370" rx="65" ry="6"/>
+
+  <!-- Glow ring behind bulb — accent decoration, hidden in static state -->
+  <circle class="glow-ring" cx="340" cy="185" r="110"/>
+
+  <!-- Light rays radiating from bulb — 6 rays around the glass -->
+  <!-- Each ray is a short line segment pointing outward from the bulb center -->
+  <line class="ray ray-1" x1="340" y1="90" x2="340" y2="65"/>
+  <line class="ray ray-2" x1="415" y1="115" x2="435" y2="100"/>
+  <line class="ray ray-3" x1="435" y1="195" x2="460" y2="195"/>
+  <line class="ray ray-4" x1="415" y1="265" x2="435" y2="280"/>
+  <line class="ray ray-5" x1="265" y1="265" x2="245" y2="280"/>
+  <line class="ray ray-6" x1="265" y1="115" x2="245" y2="100"/>
+
+  <!-- Bulb glass — classic rounded bulb shape -->
+  <path class="bulb-glass"
+    d="M 300 260
+       C 300 260, 290 220, 290 185
+       C 290 155, 300 120, 340 110
+       C 380 120, 390 155, 390 185
+       C 390 220, 380 260, 380 260
+       Z"
+  />
+
+  <!-- Filament inside the bulb — zigzag pattern -->
+  <path class="filament"
+    d="M 320 250 L 325 210 L 335 230 L 345 200 L 355 225 L 360 250"
+  />
+  <!-- Filament connection dots at top of supports -->
+  <circle class="filament-dot" cx="320" cy="250" r="3"/>
+  <circle class="filament-dot" cx="360" cy="250" r="3"/>
+
+  <!-- Screw base — three horizontal bands below the glass -->
+  <rect class="bulb-base" x="305" y="262" width="70" height="18" rx="4"/>
+  <line class="base-ring" x1="305" y1="282" x2="375" y2="282"/>
+  <rect class="bulb-base" x="310" y="282" width="60" height="14" rx="4"/>
+  <line class="base-ring" x1="310" y1="298" x2="370" y2="298"/>
+  <rect class="bulb-base" x="318" y="298" width="44" height="12" rx="6"/>
+
+  <!-- Bottom contact point -->
+  <circle class="filament-dot" cx="340" cy="316" r="4"/>
+</svg>
