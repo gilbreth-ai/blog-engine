@@ -19,7 +19,8 @@ Before creating any files, ask the user these questions to personalize the blog.
 5. **Reader persona** — "Who reads this blog? Be specific about their role and what they already know." (default: skip)
 6. **Tone** — "How should the writing feel? Pick 3-4 adjectives, or paste a paragraph you love." (default: "Direct, specific, conversational.")
 7. **Primary color** — "What's your brand color? Give a hex code." (default: #e8590c)
-8. **Author name** — "Who should be credited as the author?" (default: brand name + " Team")
+8. **Font style** — "What style of typography? Modern & clean, editorial & elegant, or minimal & geometric?" (default: "modern")
+9. **Author name** — "Who should be credited as the author?" (default: brand name + " Team")
 
 Why ask these: A blog that says "Blog" in the header and uses generic descriptions feels like a template. Five minutes of personalization makes the first `pnpm dev` feel like THEIR blog, not a starter kit.
 
@@ -63,9 +64,21 @@ Using the answers from Step 1, modify the copied files:
 - Replace `metadata.title.template` with `"%s — {blog title}"`
 - Replace `metadata.description` with the user's one-line description
 - Set `<html lang="...">` to the user's language code (en, ko, ja, etc.)
+- Replace the font imports based on the user's font style choice:
+
+| Style | Heading Font | Body Font | Code Font |
+|-------|-------------|-----------|-----------|
+| **modern** (default) | Geist | Geist | Geist Mono |
+| **editorial** | Playfair Display | Lora | JetBrains Mono |
+| **minimal** | DM Sans | DM Sans | DM Mono |
+
+For Korean language blogs, add Pretendard (or Noto Sans KR) as a fallback for all fonts. For Japanese, add Noto Sans JP.
+
+Update the `next/font/google` imports, CSS variable names (`--font-heading`, `--font-body`, `--font-mono`), and the font-family declarations in `globals.css` to match.
 
 **`app/globals.css`:**
 - Replace `--color-brand: #e8590c` with the user's primary color
+- Update `--font-heading`, `--font-body`, `--font-mono` CSS variable values to match the selected fonts
 
 **`app/page.tsx`:**
 - Replace the empty-state heading "Welcome" with something personalized using the brand name (e.g., "Welcome to {brand name}'s Blog")

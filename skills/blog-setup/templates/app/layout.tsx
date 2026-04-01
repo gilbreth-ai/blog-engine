@@ -1,21 +1,20 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, Source_Serif_4, JetBrains_Mono } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-const instrumentSerif = Instrument_Serif({
+const geist = Geist({
   subsets: ["latin"],
-  weight: "400",
   variable: "--font-heading",
   display: "swap",
 });
 
-const sourceSerif = Source_Serif_4({
+const geistBody = Geist({
   subsets: ["latin"],
   variable: "--font-body",
   display: "swap",
 });
 
-const jetbrainsMono = JetBrains_Mono({
+const geistMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
   display: "swap",
@@ -37,13 +36,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${instrumentSerif.variable} ${sourceSerif.variable} ${jetbrainsMono.variable}`}
+      className={`${geist.variable} ${geistBody.variable} ${geistMono.variable}`}
     >
       <body className="flex min-h-screen flex-col bg-[var(--color-bg)] text-[var(--color-text)] antialiased">
         <header className="mx-auto flex w-full max-w-[960px] items-center justify-between px-6 py-8">
           <a
             href="/"
-            className="font-[family-name:var(--font-heading)] text-2xl tracking-tight text-[var(--color-text)] no-underline transition-opacity hover:opacity-70"
+            className="font-[family-name:var(--font-heading)] text-xl font-semibold tracking-tight text-[var(--color-text)] no-underline transition-opacity hover:opacity-70"
           >
             Blog
           </a>
